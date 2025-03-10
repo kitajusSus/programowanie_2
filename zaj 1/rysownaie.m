@@ -1,6 +1,8 @@
 % Generowanie danych (symulowane dane)
 x = linspace(0, 10, 50);  % 50 punktów w zakresie od 0 do 5
-y =  x +  rand(1,50) ;  % no i mozna tez + rand(1,50) dla szumu;
+y = linspace(0,10,50);
+r = x.^2 + y.^2;
+  % no i mozna tez + rand(1,50) dla szumu;
 
 % Dopasowanie linii regresji (współczynniki a i b)
 p = polyfit(x, y, 1)  % Dopasowanie linii do danych (stopień 1 -> linia)
@@ -9,14 +11,14 @@ a = p(1);
 b = p(2);
 
 % Definicja funkcji regresji
-y_regresja =  a * x. + b;
+%y_regresja =  a * x. + b;
 
 %parametry generalnie tego co robił;
 fps = 30;  % Klatki na sekundę
 num_frames = 100;
 r = 0.5;  % rozmiar kulki
 x_range = linspace(0, 10, num_frames);  % Zasięg X dla animacji
-y_range = y_regresja(x_range);  % Obliczenie odpowiadających punktów Y
+%y_range = y_regresja(x_range);  % Obliczenie odpowiadających punktów Y
 
 % Tworzymy okno wykresu
 figure;
@@ -42,6 +44,10 @@ for i = 1:num_frames
     pause(1 / fps);
 end
 
+
+%wczytywanie pliku itd, robic rbic  k
+
+omówineie nowe liki
 
 
 
