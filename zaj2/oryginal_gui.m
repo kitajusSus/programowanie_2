@@ -10,7 +10,7 @@ h.ax=axes("position",[0.05 0.42 0.5 0.5]); # tworzy wykres z osiami
 h.fcn=@(x)polyval([-0.1 0.5 3 0],x);       # definiuje funkcje anonimowa
 
 
-#return; #program sie skonczy po tej osi: powinien wyswietlic jedynie osie wykresu.
+return; #program sie skonczy po tej osi: powinien wyswietlic jedynie osie wykresu.
 
 
 function update_plot(obj,init=false)
@@ -71,16 +71,6 @@ function update_plot(obj,init=false)
   endif
 endfunction
 
-
-
-
-#{
-tam niżej mamy napisane h.plot. .... itd itd
-"plot title: (text)" napisane po "string"   POLE ZACHĘTY JAK LINUX $
-na wpsanie tytuły:
-#}
-
-
 ## plot title
 h.plot_title_label = uicontrol ("style", "text",
                                 "units", "normalized",
@@ -93,13 +83,6 @@ h.plot_title_edit = uicontrol ("style", "edit",
                                "string", "Please fill me! (edit)",
                                "callback", @update_plot,
                                "position", [0.6 0.80 0.35 0.06]);
-#{
-Trzeba pilnowac by rozmiary pasowały
-
-- "callback"  -- co sie stanie jesli klikne to pole,
-- @update_plot -- wyżej zdefiniowana custom funkcja , - zmienia tytuł wykresu.
-#}
-
 
 ## grid
 h.grid_checkbox = uicontrol ("style", "checkbox",
@@ -108,15 +91,6 @@ h.grid_checkbox = uicontrol ("style", "checkbox",
                              "value", 0,
                              "callback", @update_plot,
                              "position", [0.6 0.65 0.35 0.09]);
-#{
-Pole typu checkbox
-units - znormalizowane jako zakres [0,1]
-
-- string - show grid, (pokaz/ wyłącz siatkę) -- narazie nie jest zdefiniowana siatka,
-ale miejsce na jej wyłaczynie juz jest gotowe ;
-
-#}
-
 
 h.minor_grid_toggle = uicontrol ("style", "togglebutton",
                                  "units", "normalized",
@@ -124,28 +98,21 @@ h.minor_grid_toggle = uicontrol ("style", "togglebutton",
                                  "callback", @update_plot,
                                  "value", 0,
                                  "position", [0.77 0.65 0.18 0.09]);
-#{
-- Togle button- robi rzeczy polecam sobie sprawdzic samodzielnie i mnie nie denerwowac
--
-
-
-#}
-
 
 ## print figure
-h.print_pushbutton = uicontrol("style", "pushbutton",
+h.print_pushbutton = uicontrol ("style", "pushbutton",
                                 "units", "normalized",
                                 "string", "print plot\n(pushbutton)",
                                 "callback", @update_plot,
                                 "position", [0.6 0.45 0.35 0.09]);
 ## noise
-h.noise_label = uicontrol("style", "text",
+h.noise_label = uicontrol ("style", "text",
                            "units", "normalized",
                            "string", "Noise:",
                            "horizontalalignment", "left",
                            "position", [0.05 0.3 0.35 0.08]);
 
-h.noise_slider = uicontrol("style", "slider",
+h.noise_slider = uicontrol ("style", "slider",
                             "units", "normalized",
                             "string", "slider",
                             "callback", @update_plot,
