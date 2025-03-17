@@ -2,12 +2,12 @@
 ## Demo which has the aim to show all available GUI elements.
 ## Useful since Octave 4.0
 
-close all
-clear h
-graphics_toolkit qt
+close all;
+clear h;
+graphics_toolkit qt;
 
 h.ax=axes("position",[0.05 0.42 0.5 0.5]); # tworzy wykres z osiami
-h.fcn=@(x)polyval([-0.1 0.5 3 0],x);       # definiuje funkcje anonimowa
+h.fcn=@(x)polyval([-0.1 0.5 3 0],x);       # definiuje funkcje anonimową
 
 
 #return; #program sie skonczy po tej osi: powinien wyswietlic jedynie osie wykresu.
