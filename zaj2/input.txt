@@ -1,0 +1,7 @@
+12.000	2000	jeden
+1.000	212	dwa
+2.02	2123	trzy
+3.012	221	cztery
+5.051	295	piec
+6.61	18	szesc
+65	19	siedem
