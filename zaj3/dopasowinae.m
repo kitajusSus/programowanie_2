@@ -80,6 +80,7 @@ function update_plot(obj, init=false)
         [p, s] = polyfit(h.data_x, h.data_y, 1);
         h.a = p(1);  # współczynnik kierunkowy
         h.b = p(2);  # wyraz wolny
+        disp(h.a);
 
         ## Obliczenie punktów do wykresu
         h.x_fit = linspace(min(h.data_x), max(h.data_x), 100);
