@@ -1,6 +1,6 @@
 # Autor: 89219
 # Data: 2025-03-17
-
+% w wielu miejscach używam tagów, gdzie pisze  te same rzeczy na różne sposoby, by miec jak potem to zmienic
 close all
 clear all
 graphics_toolkit qt
@@ -93,7 +93,7 @@ function update_plot(obj, init=false)
         R_squared = 1 - (SS_residual / SS_total);
         h.R_squared = R_squared;
 
-        ## Aktualizowanie wyniku
+        %% Aktualizowanie wyniku
         result_text = sprintf("Wynik dopasowania:\ny = %.4f * x + %.4f\nR^2 = %.4f",
                             h.a, h.b, h.R_squared);
         set(h.result_display, "string", result_text);
@@ -158,7 +158,6 @@ function update_plot(obj, init=false)
         set(h.info_text, "string", sprintf("Wykres zapisano do pliku: %s", filename));
       endif
   endswitch
-
  %Aktualizacja wykresu
   %%% # sprawdzanie  (a nalogicznie jak ostatnio) czy argumenty h takie jak "x_fit" i "y_fit" są wypełnione. (mają wartosci
   if (replot && isfield(h, "x_fit") && isfield(h, "y_fit"))
@@ -175,7 +174,7 @@ function update_plot(obj, init=false)
     marker_idx = get(h.markerstyle_list, "value");
     markers = {"none", "+", "o", "*", ".", "x", "s", "d", "^"};
     mstyle = markers{marker_idx};
-   %NASYsoene  danych i dopasowania
+   %nieniesienie  danych i dopasowania
     cla(h.ax);
     hold(h.ax, "on");
     plot(h.ax, h.data_x, h.data_y, "o", "markersize", 6); %dane
@@ -184,9 +183,7 @@ function update_plot(obj, init=false)
           "linestyle", lstyle,
          "linewidth", linewidth,
          "marker", mstyle); %prosta
-
     legend(h.ax, "Dane", "Prosta dopasowana");
-
     %%Aktualizacja tytułu wykresu
     plot_tytul = get(h.zmiana_nazwy, "string");
     if (!isempty(plot_tytul))
@@ -194,13 +191,10 @@ function update_plot(obj, init=false)
     else
       title(h.ax, "pole do zmiany nazwy wykresu");
     endif
-
     xlabel(h.ax, "X");
     ylabel(h.ax, "Y");
-
     % Zastosowanie siatki
     grid(h.ax, merge(get(h.grid_checkbox, "value"), "on", "off"));
-
     hold(h.ax, "off");
   endif
 endfunction
@@ -254,7 +248,7 @@ h.tytul_label = uicontrol("style", "text",
                              "string", "Tytuł wykresu:",
                              "horizontalalignment", "left",
                              "position", [0.6, 0.85, 0.35, 0.05]);
-
+% change name
 h.zmiana_nazwy = uicontrol("style", "edit",
                             "units", "normalized",
                             "string", "Defaulotowe ustawienie tittle wykresy",
@@ -274,6 +268,7 @@ h.line_thickness_label = uicontrol("style", "text",
                                  "horizontalalignment", "left",
                                  "position", [0.6, 0.70, 0.35, 0.05]);
 %% line T H I  C C  ness  no dosłownie wiadomo o co be
+% grubosc linii / grubosc
 h.line_thickness = uicontrol("style", "slider",
                            "units", "normalized",
                            "min", 1,
@@ -330,6 +325,6 @@ h.markerstyle_list = uicontrol("style", "listbox",
                              "callback", @update_plot,
                              "position", [0.6, 0.20, 0.35, 0.20]);
 
-set(gcf, "color", [1,0.2,0.3]);
+set(gcf, "color", [1,1,1]);
 guidata(gcf, h);
 update_plot(gcf, true);
