@@ -1,8 +1,8 @@
 # Autor: 89219
 # Data: 2025-03-17
 % w wielu miejscach używam tagów, gdzie pisze  te same rzeczy na różne sposoby, by miec jak potem to zmienic
-close all
-clear all
+close all;
+clear all;
 graphics_toolkit qt
 
 % Funkcja pomocnicza do wyboru wartości na podstawie warunku
@@ -76,10 +76,10 @@ function update_plot(obj, init=false)
 
     case {h.przycisk_dopasowania}
       if (isfield(h, "data_x") && isfield(h, "data_y"))
-        # Dopasowanie prostej (wielomian stopnia 1)
+        % Dopasowanie prostej (wielomian stopnia 1)
         [p, s] = polyfit(h.data_x, h.data_y, 1);
-        h.a = p(1);  # współczynnik kierunkowy
-        h.b = p(2);  # wyraz wolny
+        h.a = p(1);  % współczynnik kierunkowy
+        h.b = p(2);  % wyraz wolny
         fprintf("AutoDeubgger Przycisk dopasowania, dziala: %f \n", h.a);
 
         % Obliczenie punktów do wykresu
@@ -111,9 +111,9 @@ function update_plot(obj, init=false)
       v = get(gcbo, "string");
       title(h.ax, v);
 
-    case {h.linecolor_radio_blue, h.linecolor_radio_red}
-      set(h.linecolor_radio_blue, "value", gcbo == h.linecolor_radio_blue);
-      set(h.linecolor_radio_red, "value", gcbo == h.linecolor_radio_red);
+    case {h.linecolor_niebieski, h.linecolor_czerwony}
+      set(h.linecolor_niebieski, "value", gcbo == h.linecolor_niebieski);
+      set(h.linecolor_czerwony, "value", gcbo == h.linecolor_czerwony);
       replot = true;
 
     case {h.linestyle_popup, h.markerstyle_list}
@@ -163,7 +163,7 @@ function update_plot(obj, init=false)
     % Pobranie aktualnych ustawień
     linewidth = get(h.line_thickness, "value");
   %Kolor linii
-    cb_red = get(h.linecolor_radio_red, "value");
+    cb_red = get(h.linecolor_czerwony, "value");
     line_color = merge(cb_red, [1 0 0], [0 0 1]);
  %Styl linii
     lstyle_idx = get(h.linestyle_popup, "value");
@@ -286,14 +286,14 @@ h.linecolor_label = uicontrol("style", "text",
                             "horizontalalignment", "left",
                             "position", [0.6, 0.60, 0.35, 0.05]);
 
-h.linecolor_radio_blue = uicontrol("style", "radiobutton",
+h.linecolor_niebieski = uicontrol("style", "radiobutton",
                                  "units", "normalized",
                                  "string", "Niebieski",
                                  "value", 1,
                                  "callback", @update_plot,
                                  "position", [0.6, 0.55, 0.15, 0.05]);
 
-h.linecolor_radio_red = uicontrol("style", "radiobutton",
+h.linecolor_czerwony = uicontrol("style", "radiobutton",
                                 "units", "normalized",
                                 "string", "Czerwony",
                                 "value", 0,
