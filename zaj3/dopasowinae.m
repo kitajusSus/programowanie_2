@@ -80,20 +80,20 @@ function update_plot(obj, init=false)
         [p, s] = polyfit(h.data_x, h.data_y, 1);
         h.a = p(1);  # współczynnik kierunkowy
         h.b = p(2);  # wyraz wolny
-        disp(h.a);
+        fprintf("AutoDeubgger Przycisk dopasowania, dziala: %f \n", h.a);
 
-        ## Obliczenie punktów do wykresu
+        % Obliczenie punktów do wykresu
         h.x_fit = linspace(min(h.data_x), max(h.data_x), 100);
         h.y_fit = polyval(p, h.x_fit);
 
-        ## Obliczenie R^2 (współczynnik determinacji)
+        % Obliczenie R^2 (współczynnik determinacji)
         y_fit = polyval(p, h.data_x);
         SS_total = sum((h.data_y - mean(h.data_y)).^2);
         SS_residual = sum((h.data_y - y_fit).^2);
         R_squared = 1 - (SS_residual / SS_total);
         h.R_squared = R_squared;
 
-        %% Aktualizowanie wyniku
+        % Aktualizowanie wyniku
         result_text = sprintf("Wynik dopasowania:\ny = %.4f * x + %.4f\nR^2 = %.4f",
                             h.a, h.b, h.R_squared);
         set(h.result_display, "string", result_text);
@@ -129,8 +129,7 @@ function update_plot(obj, init=false)
                                         "Zapisz wyniki");
         if (filename != 0)
           fullpath = fullfile(filepath, filename);
-
-          ## Zapisanie wyników do pliku
+        % Zapisanie wyników do pliku
           zapisany_file = fopen(fullpath, "wt");
           fprintf(zapisany_file, "# Wyniki dopasowania prostej\n");
           fprintf(zapisany_file, "# Data: %s\n\n", datestr(now));
@@ -158,19 +157,19 @@ function update_plot(obj, init=false)
         set(h.info_text, "string", sprintf("Wykres zapisano do pliku: %s", filename));
       endif
   endswitch
- %Aktualizacja wykresu
-  %%% # sprawdzanie  (a nalogicznie jak ostatnio) czy argumenty h takie jak "x_fit" i "y_fit" są wypełnione. (mają wartosci
+%Aktualizacja wykresu
+%  sprawdzanie  (a nalogicznie jak ostatnio) czy argumenty h takie jak "x_fit" i "y_fit" są wypełnione. (mają wartosci
   if (replot && isfield(h, "x_fit") && isfield(h, "y_fit"))
-    # Pobranie aktualnych ustawień
+    % Pobranie aktualnych ustawień
     linewidth = get(h.line_thickness, "value");
-    # Kolor linii
+  %Kolor linii
     cb_red = get(h.linecolor_radio_red, "value");
     line_color = merge(cb_red, [1 0 0], [0 0 1]);
-    # Styl linii
+ %Styl linii
     lstyle_idx = get(h.linestyle_popup, "value");
     lstyles = {"-", "--", ":", "-."};
     lstyle = lstyles{lstyle_idx};
-    ## Styl znacznika
+ % Styl znacznika
     marker_idx = get(h.markerstyle_list, "value");
     markers = {"none", "+", "o", "*", ".", "x", "s", "d", "^"};
     mstyle = markers{marker_idx};
