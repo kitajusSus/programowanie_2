@@ -79,7 +79,7 @@ graph TD
    data = textscan(plik1, "%f %f %s");
    ```
    - %f - liczba zmiennoprzecinkowa
-   - %s - tekst (komentarz)
+   - %s - tekst/string (komentarz)
 
 3. Przetwarzanie danych:
    ```octave

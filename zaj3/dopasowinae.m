@@ -63,7 +63,9 @@ function update_plot(obj, init=false)
 
           guidata(obj, h);
          % Wyświetlenie surowych danych
-          plot(h.ax, h.data_x, h.data_y, "o", "markersize", 8);
+         ## ERRORBAR USTAWIENIE  errorbar(X,Y,EX,EY,FMT)
+         % errorbar
+          errorbar(h.data_x, h.data_y,1,0.5, "o", "markersize", 8);
           title(h.ax, "Dane wejściowe");
           grid(h.ax, "on");
           xlabel(h.ax, "X");
@@ -92,12 +94,10 @@ function update_plot(obj, init=false)
         SS_residual = sum((h.data_y - y_fit).^2);
         R_squared = 1 - (SS_residual / SS_total);
         h.R_squared = R_squared;
-
         % Aktualizowanie wyniku
         result_text = sprintf("Wynik dopasowania:\ny = %.4f * x + %.4f\nR^2 = %.4f",
                             h.a, h.b, h.R_squared);
         set(h.result_display, "string", result_text);
-
         guidata(obj, h);
         replot = true;
         set(h.info_text, "string", "Dopasowanie prostej zakończone");
@@ -176,7 +176,7 @@ function update_plot(obj, init=false)
    %nieniesienie  danych i dopasowania
     cla(h.ax);
     hold(h.ax, "on");
-    plot(h.ax, h.data_x, h.data_y, "o", "markersize", 6); %dane
+    errorbar( h.data_x, h.data_y,25,15, '>'); %dane
     plot(h.ax, h.x_fit, h.y_fit,
           "color", line_color,
           "linestyle", lstyle,
@@ -219,13 +219,13 @@ h.info_text = uicontrol("style", "text",
 %%Statystyki danych
 h.stats_display = uicontrol("style", "text",
                           "units", "normalized",
-                          "string", "",
+                          "string", "puste okno h.stats_display",
                           "horizontalalignment", "left",
                           "position", [0.05, 0.15, 0.25, 0.12]);
 % Wyniki dopasowania
 h.result_display = uicontrol("style", "text",
                            "units", "normalized",
-                           "string", "",
+                           "string", "puste okno h.result_display, wyniki",
                            "horizontalalignment", "left",
                            "position", [0.31, 0.15, 0.25, 0.12]);
 
@@ -311,7 +311,7 @@ h.linestyle_popup = uicontrol("style", "popupmenu",
                             "string", {"-  linia ciągła", "-- linia przerywana", ":  linia kropkowana", "-. linia kropkowo-kreskowa"},
                             "callback", @update_plot,
                             "position", [0.6, 0.45, 0.35, 0.05]);
-
+# zmiana kształtu punktów, dla każdego elementu regresji
 h.markerstyle_label = uicontrol("style", "text",
                               "units", "normalized",
                               "string", "Styl znacznika:",
