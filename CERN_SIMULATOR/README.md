@@ -17,7 +17,8 @@
 *Otrzymamy plik od dr. Brancewicza dotyczący opisu projektu przez nas.*
 - zmienić imie i nazwisko, bez polskich liter,
 - robic etapy, rozplanowanie według dokumentacji własnej, 
-- 
+-  przygotować przekazywanie pędu
+- opisać to itd 
 
 
 
@@ -69,8 +70,8 @@ Oczywiście jest to poprzedzone czymś w rodzaju kontruktora z cpp. Czyli Clasa 
 3. Tworzenie `Particles`: 
 [Cern simulator testowanie tworzenie obiektów](tests/adding_obj.m) W tym pliku tworzyłem obiekty na bazie inputu uzytkownika i sprawdzałem jak się zmieniają w czasie.
 - potem planuje by móc w gui za pomocą suwaków generować i zmieniać cechy obiektów. (cząstek.Particles)
-- Trzeba sprawdzać rozmiar tych cząstek by razem z położeniem środka śledzić promień i jeśli odleglość pomiędzy $r_1 + r_2 <= d$ uruchomić program do odbijania. czy coś takiego
-
+- Trzeba sprawdzać rozmiar tych cząstek by razem z położeniem środka śledzić promień i jeśli odleglość pomiędzy $r_1 + r_2 <= d$ uruchomić program do odbijania. czy coś takiego [Dodałem sprawdzanie tego](tests/adding_obj.m)
+- Zachowanie pędu, zderzenia, liczenie energii przy zderzeniu, 
 
 ## Notatki dotyczące rzeczy: 
 **Jak tworzyć klasy?**
