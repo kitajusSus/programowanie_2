@@ -8,3 +8,6 @@ Opis projektu:
 - program prezentujący zderzanie się cząstek i ich zachowanie z skutek zderzania, (rozpad itd)
 - możliwości: wybór prędkości dla cząstki 1 i cząstki 2, tak samo możliwośc zmiany masy
 #}
+
+% = Particle(masa, [x,y,x], [vx,vy,vx], 'nazwa_particle');
+a = Particle()
