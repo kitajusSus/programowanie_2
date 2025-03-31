@@ -3,7 +3,7 @@ clc;
 
 % Tworzenie obiektu klasy Particle
 fprintf('Tworzenie cząstki...\n');
-a = Particle(1.0, [0, 0], [1, 1], 'skibidi');
+a = Particle(1.0, [0, 0], [1, 1.2], 'proton');
 disp(a);
 fprintf('Początkowy stan cząstki: [%.2f , %.2f]\n', a.position(1), a.position(2));
 a = a.update(2);

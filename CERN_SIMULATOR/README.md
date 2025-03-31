@@ -32,9 +32,13 @@ Tworzenie potrzebnego aparatu matematycznego.
 - jak to opisać? jak to obliczyć dla dwóch cząstek w octave? 
 - dla przykładu jedna z nich jest nieruchoma a druga porusza się w strone tej pierwszej z jakąś prędkością.  
 **Zachowanie pędu:**
-$$m_1v_1 + m_2v_2 =m_1v_1' + m_2v_2' $$
+
+$$ m_1v_1 + m_2v_2 =m_1v_1' + m_2v_2' $$
+
 **Zachowanie energii dla zdarzeń idealnie sprężystych:**
+
 $$(\frac{1}{2})[m_1v_{1}^{2}+ m_2v_{2}^{2} = m_1v_{1}'^{2}+ m_2v_{1}'^{2}]$$
+
 2. Kierunek, zwroty, wektory: 
 - *Jak  wyliczyć położenie cząstki, po odbiciu? przed odbiciem?*
 - *kiedy następuje zderzenie?*
