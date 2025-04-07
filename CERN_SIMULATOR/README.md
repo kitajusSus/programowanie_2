@@ -106,11 +106,13 @@ $$p = 1 + 2x + 2x^2 + 5x^3$$
 
 # Zajęcia 2 Projektowanie CentralnegoElektrycznoRoboczegoNibySymulatora
 - nie mozna uzyc nazwy cern simulator bo do chyba jakas obraza jest. 
--  co ty kurwa gnoju wiesz z fizyki ze wogle śniło ci się by wymawiać cos takiego, chujów sto.
+-  co ty kurwa gnoju wiesz z fizyki ze wogle śniło ci się by wymawiać cos takiego, chujów sto i wypierdalaj robić jakieś nie dość że mozolne gówno to jeszcze męczące do animowania. Chcesz sie nauczyć fizycznych rzeczy to polecam ci bezubik zapierdalaj z łopatą. (Nie powiedział nic takiego ale powiedział coś o tym że nic nie wiem o cząstkach i sie nie znam)
 
 
+**Projekt masz narysowany w zeszycie do optyki na koncu.**
 
 
+![Wyglada to mniej wiecej tak](image.png)
 
 
 
