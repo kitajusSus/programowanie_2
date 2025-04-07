@@ -74,7 +74,7 @@ function cern_simulator
                        'Title', 'Dane symulacji', ...
                        'BackgroundColor', colors.panel);
 
-    % --- PANEL CZĄSTKI 1 ---
+    %  MODYFIKOWNIE PARTICLE1
 
     % Etykiety i pola cząstki 1
     % Masa
@@ -149,7 +149,7 @@ function cern_simulator
                                'BackgroundColor', 'white', ...
                                'Callback', @updateParticles);
 
-    % --- PANEL CZĄSTKI 2 ---
+    % MODYFI KOWANIE PARTICLE2
 
     % Etykiety i pola cząstki 2
     % Masa
@@ -527,34 +527,34 @@ function cern_simulator
         set(momentum2Text, 'String', sprintf('[%.3f, %.3f]', p2(1), p2(2)));
     end
 
-% Funkcja do uruchamiania symulacji
-function startSimulation(~, ~)
-    if ~simData.isRunning
-        simData.isRunning = true;
-        % Uruchamiamy pętlę symulacji
-        timerLoop();
+    % Funkcja do uruchamiania symulacji
+    function startSimulation(~, ~)
+        if ~simData.isRunning
+            simData.isRunning = true;
+            % Uruchamiamy pętlę symulacji
+            timerLoop();
+        end
     end
-end
 
-% Funkcja do zatrzymywania symulacji
-function stopSimulation(~, ~)
-    simData.isRunning = false;
-    % Nie ma potrzeby wywoływać stop() na timerze
-end
+    % Funkcja do zatrzymywania symulacji
+    function stopSimulation(~, ~)
+        simData.isRunning = false;
+        % Nie ma potrzeby wywoływać stop() na timerze
+    end
 
 % Pętla symulująca timer
-function timerLoop()
-    while simData.isRunning
-        % Wywołanie funkcji aktualizującej symulację
-        updateSimulation();
+    function timerLoop()
+        while simData.isRunning
+            % Wywołanie funkcji aktualizującej symulację
+            updateSimulation();
 
-        % Odświeżenie GUI
-        drawnow;
+            % Odświeżenie GUI
+          drawnow;
 
-        % Pauza dla lepszej wizualizacji
-        pause(simData.dt); % odpowiednik Period w timerze
+           % Pauza dla lepszej wizualizacji
+          pause(simData.dt); % odpowiednik Period w timerze
+        end
     end
-end
 
     % Funkcja aktualizująca symulację (wywoływana przez timer)
     function updateSimulation(~, ~)
