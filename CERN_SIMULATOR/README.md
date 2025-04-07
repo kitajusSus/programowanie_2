@@ -1,4 +1,4 @@
-# CERN SIMULATOR
+# zderzenia cząstek ładunków elektrycznych. 
 
 **Przedmiot**: Programowanie 2 |semestr letni 2025 fizyka ogólna|
 
@@ -101,7 +101,10 @@ p =
 ```
 > Jak widać liczby w nawiasie kwadratowym odpowadają wartości wspólczynników w wielomianie.
 
-$$p = 1 + 2x + 2x^2 + 5x^3$$
+$$p = 1 + 2x + 2x^2 + 5x^3$$\\
+
+
+
 
 
 
