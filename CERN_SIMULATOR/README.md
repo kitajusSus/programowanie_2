@@ -101,7 +101,15 @@ p =
 ```
 > Jak widać liczby w nawiasie kwadratowym odpowadają wartości wspólczynników w wielomianie.
 
-$$p = 1 + 2x + 2x^2 + 5x^3$$\\
+$$p = 1 + 2x + 2x^2 + 5x^3$$
+
+
+# Zajęcia 2 Projektowanie CentralnegoElektrycznoRoboczegoNibySymulatora
+- nie mozna uzyc nazwy cern simulator bo do chyba jakas obraza jest. 
+-  co ty kurwa gnoju wiesz z fizyki ze wogle śniło ci się by wymawiać cos takiego, chujów sto.
+
+
+
 
 
 
