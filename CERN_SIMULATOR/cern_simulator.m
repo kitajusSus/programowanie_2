@@ -4,7 +4,7 @@ function cern_simulator
     % Data: 2025-04-07
 
     % Tworzenie i konfiguracja głównego okna
-    fig = figure('Name', 'pow pow pow krzysiu piontek', 'NumberTitle', 'off', ...
+    fig = figure('Name', 'CERN SIMULATOR', 'NumberTitle', 'off', ...
                 'Position', [100, 100, 1000, 600], 'MenuBar', 'none', ...
                 'Resize', 'on', 'CloseRequestFcn', @exitProgram);
 
@@ -252,7 +252,14 @@ function cern_simulator
                            'String', 'Reset', ...
                            'Callback', @resetSimulation, ...
                            'BackgroundColor', colors.button);
-
+    %PRZYCISK RYSOWANIE WYKRESU:
+    wykres1_button = uicontrol('Parent', controlButtonsPanel, ...
+                           'Style', 'pushbutton', ...
+                           'Units', 'normalized', ...
+                           'Position', [0.7, 0.2, 0.25, 0.6], ...
+                           'String', 'Reset', ...
+                           'Callback', @resetSimulation, ...
+                           'BackgroundColor', colors.button);
     % --- PANEL INFORMACYJNY ---
 
     % Siła Coulomba
@@ -273,7 +280,7 @@ function cern_simulator
              'Units', 'normalized', ...
              'Position', [0.05, 0.71, 0.35, 0.12], ...
              'HorizontalAlignment', 'left', ...
-             'String', 'Energia kinetyczna 1:');
+             'String', 'E_kinetyczna 1:');
     energy1Text = uicontrol('Parent', infoPanel, 'Style', 'text', ...
                           'Units', 'normalized', ...
                           'Position', [0.45, 0.71, 0.5, 0.12], ...
@@ -286,13 +293,14 @@ function cern_simulator
              'Units', 'normalized', ...
              'Position', [0.05, 0.57, 0.35, 0.12], ...
              'HorizontalAlignment', 'left', ...
-             'String', 'Energia kinetyczna 2:');
+             'String', 'E_kinetyczna 2:');
     energy2Text = uicontrol('Parent', infoPanel, 'Style', 'text', ...
                           'Units', 'normalized', ...
                           'Position', [0.45, 0.57, 0.5, 0.12], ...
                           'String', '0 J', ...
                           'HorizontalAlignment', 'left', ...
                           'BackgroundColor', 'white');
+
 
     % Pęd cząstki 1
     uicontrol('Parent', infoPanel, 'Style', 'text', ...
@@ -332,13 +340,23 @@ function cern_simulator
                         'String', '0 s', ...
                         'HorizontalAlignment', 'left', ...
                         'BackgroundColor', 'white');
-
+    % SUMA OBU ENERGII (SPRAWDZANIE CZY ZACHODZI ZASADA ZACHOWANIA ENERGII)
+    uicontrol('Parent', infoPanel, 'Style', 'text', ...
+             'Units', 'normalized', ...
+             'Position', [0.05, 0.02, 0.35, 0.12], ...
+             'HorizontalAlignment', 'left', ...
+             'String', 'E_kin SUMA:');
+    energySuma = uicontrol('Parent', infoPanel, 'Style', 'text', ...
+                          'Units', 'normalized', ...
+                          'Position', [0.44, 0.02, 0.5, 0.12], ...
+                          'String', '0 J', ...
+                          'HorizontalAlignment', 'left', ...
+                          'BackgroundColor', 'white');
     % --- ZMIENNE GLOBALNE dla funkcji ---
     simData = struct();
     simData.particle1 = createParticle(1.0, [-5, 0, 0], [0, 0, 0], 'p1', -1.0);
     simData.particle2 = createParticle(2.0, [5, 0, 0], [0, 0, 0], 'p2', -1.0);
     simData.isRunning = false;
-    % Usunięto linię tworzącą obiekt timer
     simData.time = 0;
     simData.dt = 0.05;
     simData.historyLength = 20;
@@ -346,6 +364,9 @@ function cern_simulator
     simData.p2History = zeros(simData.historyLength, 2);
 
     % Inicjalizacja grafiki cząstek
+    hold(simulationAxes, 'on');
+
+    % Dodanie cząstek
     simData.p1Handle = plot(simulationAxes, simData.particle1.position(1), simData.particle1.position(2), ...
                          'o', 'MarkerSize', 10*simData.particle1.mass, ...
                          'MarkerFaceColor', colors.particle1, 'MarkerEdgeColor', 'none');
@@ -354,8 +375,8 @@ function cern_simulator
                          'MarkerFaceColor', colors.particle2, 'MarkerEdgeColor', 'none');
 
     % Inicjalizacja trajektorii
-    simData.p1TrajectoryHandle = plot(simulationAxes, NaN, NaN, '-', 'Color', [0.8, 0.2, 0.2, 0.5], 'LineWidth', 1);
-    simData.p2TrajectoryHandle = plot(simulationAxes, NaN, NaN, '-', 'Color', [0.2, 0.2, 0.8, 0.5], 'LineWidth', 1);
+    simData.p1TrajectoryHandle = plot(simulationAxes, NaN, NaN, 'r-', 'LineWidth', 1);
+    simData.p2TrajectoryHandle = plot(simulationAxes, NaN, NaN, 'b-', 'LineWidth', 1);
 
     % Inicjalizacja wektorów sił i prędkości
     simData.p1VelocityHandle = quiver(simulationAxes, simData.particle1.position(1), simData.particle1.position(2), ...
@@ -371,10 +392,20 @@ function cern_simulator
     simData.interactionTextHandle = text(0, 9, '', 'FontSize', 12, 'HorizontalAlignment', 'center', ...
                                        'Parent', simulationAxes);
 
+    hold(simulationAxes, 'off');
+
     % Wywołanie funkcji inicjalizującej pozycje cząstek
     updateParticles();
 
     % ===== FUNKCJE POMOCNICZE =====
+
+    % Funkcja do resetowania symulacji
+    function resetSimulation(~, ~)
+        stopSimulation();
+        updateParticles();
+        simData.time = 0;
+        set(timeText, 'String', sprintf('%.2f s', simData.time));
+    end
 
     % Funkcja tworząca cząstkę
     function particle = createParticle(mass, position, velocity, type, charge)
@@ -387,13 +418,16 @@ function cern_simulator
     end
 
     % Funkcja obliczająca siłę elektrostatyczną między cząstkami
-    function [F_vec, F_mag] = calculateElectricForce(p1, p2)
+    function [F_vec, F_mag] = calcCoulomb(p1, p2)
         % Stała Coulomba
         k = 8.99e9; % N*m^2/C^2
 
         % Wektor od p1 do p2
         r_vec = p2.position(1:2) - p1.position(1:2);
-        r_vec(3) = 0; % Ignorujemy wymiar Z
+        % Dodajemy trzecią składową jeśli jej nie ma
+        if length(r_vec) < 3
+            r_vec(3) = 0;
+        end
         r_mag = norm(r_vec);
 
         % Unikamy dzielenia przez zero
@@ -441,9 +475,13 @@ function cern_simulator
             set(simData.p2Handle, 'XData', simData.particle2.position(1), ...
                                 'YData', simData.particle2.position(2));
 
-            % Aktualizacja historii
-            simData.p1History = zeros(simData.historyLength, 2);
-            simData.p2History = zeros(simData.historyLength, 2);
+            % Aktualizacja historii (wypełniamy aktualną pozycją)
+            simData.p1History = repmat(simData.particle1.position(1:2), simData.historyLength, 1);
+            simData.p2History = repmat(simData.particle2.position(1:2), simData.historyLength, 1);
+
+            % Aktualizacja trajektorii
+            set(simData.p1TrajectoryHandle, 'XData', NaN, 'YData', NaN);
+            set(simData.p2TrajectoryHandle, 'XData', NaN, 'YData', NaN);
 
             % Aktualizacja wektorów
             updateVelocityVectors();
@@ -463,7 +501,7 @@ function cern_simulator
 
     % Funkcja do aktualizacji wektorów prędkości
     function updateVelocityVectors()
-        scale = 0.5; % Skala wizualizacji prędkości
+        scale = 1; % Skala wizualizacji prędkości
         set(simData.p1VelocityHandle, 'XData', simData.particle1.position(1), ...
                                      'YData', simData.particle1.position(2), ...
                                      'UData', scale * simData.particle1.velocity(1), ...
@@ -477,11 +515,11 @@ function cern_simulator
     % Funkcja do aktualizacji wektorów sił
     function updateForceVectors()
         % Obliczanie sił
-        [F_2_on_1, F_mag] = calculateElectricForce(simData.particle1, simData.particle2);
+        [F_2_on_1, F_mag] = calcCoulomb(simData.particle1, simData.particle2);
         F_1_on_2 = -F_2_on_1; % Trzecia zasada dynamiki Newtona
 
         % Ustawienie skali wizualizacji sił
-        scale = 0.01; % Skala do wizualizacji
+        scale = 1; % Skala do wizualizacji
 
         % Aktualizacja wektorów sił
         set(simData.p1ForceHandle, 'XData', simData.particle1.position(1), ...
@@ -509,7 +547,7 @@ function cern_simulator
     % Funkcja do aktualizacji wyświetlanych danych symulacji
     function updateSimulationData()
         % Obliczanie sił
-        [~, F_mag] = calculateElectricForce(simData.particle1, simData.particle2);
+        [~, F_mag] = calcCoulomb(simData.particle1, simData.particle2);
 
         % Obliczanie energii kinetycznych
         E1 = 0.5 * simData.particle1.mass * norm(simData.particle1.velocity)^2;
@@ -523,6 +561,7 @@ function cern_simulator
         set(forceText, 'String', sprintf('%.3e N', F_mag));
         set(energy1Text, 'String', sprintf('%.3e J', E1));
         set(energy2Text, 'String', sprintf('%.3e J', E2));
+        set(energySuma, 'String', sprintf('%.3e J', E1+E2));
         set(momentum1Text, 'String', sprintf('[%.3f, %.3f]', p1(1), p1(2)));
         set(momentum2Text, 'String', sprintf('[%.3f, %.3f]', p2(1), p2(2)));
     end
@@ -539,38 +578,40 @@ function cern_simulator
     % Funkcja do zatrzymywania symulacji
     function stopSimulation(~, ~)
         simData.isRunning = false;
-        % Nie ma potrzeby wywoływać stop() na timerze
     end
 
-% Pętla symulująca timer
+    % Pętla symulująca timer
     function timerLoop()
         while simData.isRunning
             % Wywołanie funkcji aktualizującej symulację
             updateSimulation();
-
             % Odświeżenie GUI
-          drawnow;
-
-           % Pauza dla lepszej wizualizacji
-          pause(simData.dt); % odpowiednik Period w timerze
+            drawnow();
+            % Pauza dla lepszej wizualizacji
+            pause(simData.dt); % odpowiednik Period w timerze
         end
     end
 
-    % Funkcja aktualizująca symulację (wywoływana przez timer)
-    function updateSimulation(~, ~)
+    % Funkcja aktualizująca symulację
+    function updateSimulation()
         % Aktualizacja czasu
         simData.time = simData.time + simData.dt;
         set(timeText, 'String', sprintf('%.2f s', simData.time));
 
         % Obliczanie sił i przyspieszeń
-        [F_2_on_1, ~] = calculateElectricForce(simData.particle1, simData.particle2);
+        [F_2_on_1, ~] = calcCoulomb(simData.particle1, simData.particle2);
         F_1_on_2 = -F_2_on_1; % Trzecia zasada dynamiki Newtona
 
         % Obliczanie przyspieszeń
         a1 = F_2_on_1(1:2) / simData.particle1.mass;
-        a1(3) = 0; % Zerujemy składową Z
+        if length(a1) < 3
+            a1(3) = 0;
+        end
+
         a2 = F_1_on_2(1:2) / simData.particle2.mass;
-        a2(3) = 0; % Zerujemy składową Z
+        if length(a2) < 3
+            a2(3) = 0;
+        end
 
         % Aktualizacja prędkości
         simData.particle1.velocity(1:2) = simData.particle1.velocity(1:2) + a1(1:2) * simData.dt;
@@ -620,11 +661,10 @@ function cern_simulator
 
         % Sprawdzanie kolizji między cząstkami
         distance = norm(simData.particle1.position(1:2) - simData.particle2.position(1:2));
-        collision_threshold = simData.particle1.mass + simData.particle2.mass;
+        kolizja_gdy = simData.particle1.mass + simData.particle2.mass;
 
-        if distance <= collision_threshold
-            % Obsługa kolizji - prosty model odbicia sprężystego
-            % (w pełnej implementacji należałoby użyć bardziej zaawansowanego modelu)
+         %zderzenia
+        if distance <= kolizja_gdy
 
             % Wektor łączący środki cząstek
             r_vec = simData.particle2.position(1:2) - simData.particle1.position(1:2);
@@ -646,7 +686,7 @@ function cern_simulator
             simData.particle2.velocity(1:2) = simData.particle2.velocity(1:2) + (v2_new - v2_proj) * r_unit;
 
             % Odsunięcie cząstek, aby uniknąć "przyklejania"
-            overlap = collision_threshold - distance;
+            overlap = kolizja_gdy - distance;
             simData.particle1.position(1:2) = simData.particle1.position(1:2) - 0.5 * overlap * r_unit;
             simData.particle2.position(1:2) = simData.particle2.position(1:2) + 0.5 * overlap * r_unit;
         end
@@ -672,7 +712,7 @@ function cern_simulator
         % Aktualizacja danych symulacji
         updateSimulationData();
 
-        % Aktualizacja pól edycji (opcjonalne)
+        % Aktualizacja pól edycji
         set(p1VelocityXEdit, 'String', sprintf('%.2f', simData.particle1.velocity(1)));
         set(p1VelocityYEdit, 'String', sprintf('%.2f', simData.particle1.velocity(2)));
         set(p1PositionXEdit, 'String', sprintf('%.2f', simData.particle1.position(1)));
@@ -682,17 +722,16 @@ function cern_simulator
         set(p2VelocityYEdit, 'String', sprintf('%.2f', simData.particle2.velocity(2)));
         set(p2PositionXEdit, 'String', sprintf('%.2f', simData.particle2.position(1)));
         set(p2PositionYEdit, 'String', sprintf('%.2f', simData.particle2.position(2)));
-
-        drawnow;
     end
+
     % Funkcja do zamknięcia programu
     function exitProgram(~, ~)
-      % Zatrzymanie symulacji, jeśli działa
-      if simData.isRunning
-          simData.isRunning = false;
-      end
-    delete(gcf);
-  end
+        % Zatrzymanie symulacji, jeśli działa
+        if simData.isRunning
+            simData.isRunning = false;
+        end
+        delete(gcf);
+    end
 end
 
 
