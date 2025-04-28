@@ -153,12 +153,11 @@ $$p = 1 + 2x + 2x^2 + 5x^3$$
 
 ---
 
-## Jak Tworzyć Elementy GUI (Mały Poradnik na Podstawie Kodu)
-
+## Jak Tworzyć Elementy GUI
 Tworzenie interfejsu w Octave opiera się głównie na kilku funkcjach:
 
 1.  **`figure` - Główne Okno**
-    *   To podstawa. Wywołanie `fig = figure(...)` tworzy nowe okno.
+    *   Wywołanie `fig = figure(...)` tworzy nowe okno. Było na zajeciach jest w każdym programowanie 
     *   Ważne właściwości (podawane jako pary 'Nazwa', Wartość):
         *   `'Name'`: Tytuł okna.
         *   `'Position'`: `[lewy_dolny_x, lewy_dolny_y, szerokość, wysokość]` w pikselach.
