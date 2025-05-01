@@ -4,6 +4,10 @@
 
 **Indeks**: 89219,
 
+**Ważne linki**:
+*   [Link do opisu zderzeń pdf](http://newton.ftj.agh.edu.pl/~tobola/informatyka/wyklady/W5/Zderzenia.pdf) - Podstawa teoretyczna zderzeń.
+*   [Octave dokumentacja](https://docs.octave.org/latest/) - Zawsze pod ręką.
+
 **Opis projektu**:
 1.  stosując paradygmat programowania obiektowego w GNU/Octave:
 2. program prezentujący zderzanie się cząstek i ich zachowanie z skutek zderzania, (rozpad itd), 
@@ -119,4 +123,101 @@ $$p = 1 + 2x + 2x^2 + 5x^3$$
 ![LUB TAK](image-1.png)
 
 
+<<<<<<< HEAD
 
+=======
+1.  **Etap 1: Matematyka i Fizyka (Zrobione)**
+    *   **Zachowanie pędu i energii:** Wzory na zderzenia sprężyste są zaimplementowane w funkcji `updateSimulation` w sekcji kolizji cząstek. Suma energii kinetycznej jest śledzona w panelu informacyjnym (choć sama energia potencjalna nie jest liczona, więc suma kinetycznej nie musi być stała).
+    *   **Siła Coulomba:** Obliczana w funkcji `calcCoulomb`.
+    *   **Ruch:** Prosta metoda Eulera (`v = v + a*dt`, `p = p + v*dt`) w `updateSimulation`.
+
+2.  **Etap 2: Podstawy Kodu (Zrobione)**
+    *   **Struktura danych:** Zamiast klas, używamy struktury `simData` do trzymania wszystkiego (stan cząstek, flagi, uchwyty GUI). To upraszcza przekazywanie danych między funkcjami zagnieżdżonymi.
+    *   **Funkcje pomocnicze:** `createParticle`, `calcCoulomb`, `update...` - rozbijają logikę na mniejsze kawałki.
+
+3.  **Etap 3: Tworzenie GUI (Zrobione - to ten kod!)**
+    *   **Główne okno (`figure`):** Ustawienie rozmiaru, tytułu, funkcji zamykania.
+    *   **Panele (`uipanel`):** Podział okna na logiczne sekcje (kontrola, symulacja, ustawienia cząstek, przyciski, info). Ułatwia organizację.
+    *   **Kontrolki (`uicontrol`):**
+        *   `'Style', 'text'`: Etykiety opisujące inne kontrolki lub wyświetlające dane.
+        *   `'Style', 'edit'`: Pola do wprowadzania wartości przez użytkownika (masa, ładunek, prędkość, pozycja). Mają ustawioną funkcję zwrotną (`'Callback', @updateParticles`), która odpala się po zmianie wartości.
+        *   `'Style', 'pushbutton'`: Przyciski (Start, Stop, Reset). Też mają swoje funkcje zwrotne (`@startSimulation`, `@stopSimulation`, `@resetSimulation`).
+    *   **Obszar rysowania (`axes`):** Miejsce w panelu symulacji, gdzie rysujemy cząstki, trajektorie i wektory. Ma ustawione granice (`XLim`, `YLim`) i proporcje (`DataAspectRatio`).
+    *   **Grafika (`plot`, `quiver`, `text`):**
+        *   `plot(..., 'o')`: Rysuje markery cząstek. Uchwyty (`p1Handle`, `p2Handle`) pozwalają zmieniać ich pozycję (`XData`, `YData`) i rozmiar (`MarkerSize`).
+        *   `plot(..., '-')`: Rysuje linie trajektorii. Uchwyty (`p1TrajectoryHandle`, ...) pozwalają aktualizować dane (`XData`, `YData`) na podstawie historii pozycji.
+        *   `quiver(...)`: Rysuje strzałki (wektory) prędkości i sił. Uchwyty pozwalają zmieniać ich początek (`XData`, `YData`) i składowe (`UData`, `VData`).
+        *   `text(...)`: Wyświetla tekst (np. typ interakcji) na obszarze rysowania.
+
+4.  **Etap 4: Połączenie Logiki z GUI (Zrobione)**
+    *   **Pętla symulacji (`timerLoop`, `updateSimulation`):** Serce programu. Działa w tle (dzięki `pause` i `drawnow`), liczy fizykę i regularnie aktualizuje stan w `simData`.
+    *   **Aktualizacja GUI:** Funkcje `update...` (np. `updateVelocityVectors`, `updateSimulationData`) oraz bezpośrednie komendy `set(...)` w `updateSimulation` zmieniają wygląd kontrolek i grafiki na podstawie danych w `simData`.
+    *   **Interakcja użytkownika:** Callbacki przycisków (`startSimulation`, ...) i pól edycji (`updateParticles`) modyfikują `simData` (np. zmieniają `simData.isRunning` lub wartości parametrów cząstek) i odpalają odpowiednie akcje.
+
+---
+
+## Jak Tworzyć Elementy GUI
+Tworzenie interfejsu w Octave opiera się głównie na kilku funkcjach:
+
+1.  **`figure` - Główne Okno**
+    *   Wywołanie `fig = figure(...)` tworzy nowe okno. Było na zajeciach jest w każdym programowanie 
+    *   Ważne właściwości (podawane jako pary 'Nazwa', Wartość):
+        *   `'Name'`: Tytuł okna.
+        *   `'Position'`: `[lewy_dolny_x, lewy_dolny_y, szerokość, wysokość]` w pikselach.
+        *   `'Units'`: W jakich jednostkach podajemy `Position` (np. `'pixels'`, `'normalized'`). `'normalized'` jest super do skalowania.
+        *   `'MenuBar'`, `'NumberTitle'`: Kontrola wyglądu okna.
+        *   `'CloseRequestFcn'`: `@nazwa_funkcji` - co ma się stać po kliknięciu 'X'. Tutaj `@exitProgram`.
+
+2.  **`uipanel` - Kontener/Sekcja**
+    *   Służy do grupowania innych elementów. `panel = uipanel('Parent', rodzic, ...)`
+    *   `'Parent'`: Do jakiego okna (`figure`) lub innego panelu należy ten panel.
+    *   `'Title'`: Napis na ramce panelu.
+    *   `'Position'`: Położenie i rozmiar *wewnątrz rodzica*. Jeśli rodzic ma `'Units', 'normalized'`, to i tu warto użyć `'normalized'`.
+    *   `'BackgroundColor'`: Kolor tła.
+
+3.  **`axes` - Obszar Wykresu**
+    *   Miejsce do rysowania. `ax = axes('Parent', rodzic, ...)`
+    *   `'Parent'`: Zazwyczaj panel przeznaczony na symulację.
+    *   `'Position'`: Położenie i rozmiar wewnątrz rodzica.
+    *   `'XLim'`, `'YLim'`: Zakresy osi.
+    *   `'DataAspectRatio', [1 1 1]`: Żeby koła były kołami, a nie elipsami.
+    *   `'Box'`, `'Grid'`: Włączenie ramki i siatki.
+
+4.  **`uicontrol` - Przyciski, Pola Tekstowe, Edycja itp.**
+    *   Najbardziej wszechstronne narzędzie. `uchwyt = uicontrol('Parent', rodzic, 'Style', styl, ...)`
+    *   `'Parent'`: Panel lub okno, w którym ma się pojawić.
+    *   `'Style'`: Kluczowa właściwość, decyduje o typie kontrolki:
+        *   `'text'`: Zwykła etykieta tekstowa. Używamy do opisów lub wyświetlania danych (np. `forceText`). Właściwość `'String'` przechowuje tekst. `'HorizontalAlignment'` kontroluje wyrównanie.
+        *   `'edit'`: Pole do wpisywania tekstu/liczb przez użytkownika. `'String'` zawiera wpisaną wartość. `'Callback'` definiuje funkcję do wywołania po edycji.
+        *   `'pushbutton'`: Przycisk. `'String'` to napis na przycisku. `'Callback'` definiuje funkcję do wywołania po kliknięciu.
+        *   Inne style: `'slider'`, `'checkbox'`, `'radiobutton'`, `'popupmenu'`...
+    *   `'Position'`: Położenie i rozmiar wewnątrz rodzica.
+    *   `'String'`: Tekst na etykiecie/przycisku lub wartość w polu edycji.
+    *   `'Callback'`: `@nazwa_funkcji` - najważniejsze dla interaktywności! Łączy akcję użytkownika (klik, edycja) z kodem Octave.
+
+5.  **Uchwyty (Handles)**
+    *   Kiedy tworzysz element GUI (np. `przycisk = uicontrol(...)`), zmienna `przycisk` przechowuje "uchwyt" do tego elementu.
+    *   Uchwyty są niezbędne, żeby później móc modyfikować właściwości elementów za pomocą funkcji `set()`. Np.:
+        *   `set(p1Handle, 'XData', nowa_pozycja_x)` - przesuwa marker cząstki.
+        *   `set(forceText, 'String', obliczona_sila)` - aktualizuje wyświetlaną siłę.
+        *   `get(p1MassEdit, 'String')` - odczytuje wartość wpisaną przez użytkownika.
+    *   Warto przechowywać ważne uchwyty w strukturze `simData`, żeby były łatwo dostępne z różnych funkcji.
+
+6.  **`drawnow()` i `pause()` w Pętli**
+    *   W pętli symulacji (`timerLoop`) `drawnow()` wymusza odświeżenie okna GUI, żeby zmiany były widoczne.
+    *   `pause(dt)` wprowadza opóźnienie, kontrolując szybkość symulacji i dając GUI czas na reakcję.
+
+**Podsumowując:** Układasz elementy w oknie (`figure`, `uipanel`, `axes`, `uicontrol`), nadajesz im właściwości (rozmiar, pozycję, tekst, styl). Zapisujesz uchwyty do elementów, które będziesz zmieniać. Piszesz funkcje (`callbacki`), które reagują na akcje użytkownika lub postęp symulacji. W tych funkcjach używasz `get()` do odczytu danych z GUI i `set()` do aktualizacji wyglądu GUI. Całość spinasz pętlą z `drawnow()` i `pause()`. Chaotyczne? Może trochę, ale działa!
+
+---
+
+## Szkice Projektu (Historyczne)
+
+![Wyglada to mniej wiecej tak](image.png)
+*Wczesna koncepcja układu.*
+
+![LUB TAK](image-1.png)
+*Alternatywna wizja.*
+
+Aktualny kod realizuje coś zbliżonego do tych szkiców, z podziałem na panel kontrolny po lewej i symulację po prawej
+>>>>>>> a0d6462461263df9f12ae277d0f42a018e87971f
