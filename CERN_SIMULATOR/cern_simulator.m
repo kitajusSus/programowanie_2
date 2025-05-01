@@ -1,10 +1,10 @@
 function cern_simulator
-    % CERN SIMULATOR GUI - Program z interfejsem graficznym do symulacji cząstek
+    % Programowanie skibdi - poprzednia nazwa to cern simulator bo zderzenia cząstek ale działa jako skibdi simulatok
     % Autor: Krzysztof Bezubik
     % Data: 2025-04-07
 
     % Tworzenie i konfiguracja głównego okna
-    fig = figure('Name', 'CERN SIMULATOR', 'NumberTitle', 'off', ...
+    fig = figure('Name', 'Symulacja na programowanie', 'NumberTitle', 'off', ...
                 'Position', [100, 100, 1000, 600], 'MenuBar', 'none', ...
                 'Resize', 'on', 'CloseRequestFcn', @exitProgram);
 
@@ -152,6 +152,7 @@ function cern_simulator
     % MODYFI KOWANIE PARTICLE2
 
     % Etykiety i pola cząstki 2
+      
     % Masa
     uicontrol('Parent', p2Panel, 'Style', 'text', ...
              'Units', 'normalized', ...
@@ -354,8 +355,8 @@ function cern_simulator
                           'BackgroundColor', 'white');
     % --- ZMIENNE GLOBALNE dla funkcji ---
     simData = struct();
-    simData.particle1 = createParticle(1.0, [-5, 0, 0], [0, 0, 0], 'p1', -1.0);
-    simData.particle2 = createParticle(2.0, [5, 0, 0], [0, 0, 0], 'p2', -1.0);
+    simData.particle1 = createParticle(1.0, [-0.000001, 0, 0], [0, 0, 0], 'p1', 0.0000000002);
+    simData.particle2 = createParticle(2.0, [0.000002, 0, 0], [0, 0, 0], 'p2', -0.000000001);
     simData.isRunning = false;
     simData.time = 0;
     simData.dt = 0.05;
