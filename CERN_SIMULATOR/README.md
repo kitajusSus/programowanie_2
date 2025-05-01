@@ -113,14 +113,8 @@ $$p = 1 + 2x + 2x^2 + 5x^3$$
 
 
 **Projekt masz narysowany w zeszycie do optyki na koncu.**
-
-
-![Wyglada to mniej wiecej tak](image.png)
-
-
-
-![LUB TAK](image-1.png)
-
+**A zdjęcia są na dole dokumentacji**
+[##strzały ekranu](O tutaj )
 
 
 
@@ -199,13 +193,13 @@ simData.particle1.mass = 2.6;
 Tworzenie interfejsu w Octave opiera się głównie na kilku funkcjach:
 
 1.  **`figure` - Główne Okno**
-    *   Wywołanie `fig = figure(...)` tworzy nowe okno. Było na zajeciach jest w każdym programowanie 
+    *   Wywołanie `fig = figure(...)` tworzy nowe okno. Było na zajeciach jest w każdym programie 
     *   Ważne właściwości (podawane jako pary 'Nazwa', Wartość):
         *   `'Name'`: Tytuł okna.
         *   `'Position'`: `[lewy_dolny_x, lewy_dolny_y, szerokość, wysokość]` w pikselach.
         *   `'Units'`: W jakich jednostkach podajemy `Position` (np. `'pixels'`, `'normalized'`). `'normalized'` jest super do skalowania.
         *   `'MenuBar'`, `'NumberTitle'`: Kontrola wyglądu okna.
-        *   `'CloseRequestFcn'`: `@nazwa_funkcji` - co ma się stać po kliknięciu 'X'. Tutaj `@exitProgram`.
+        *   `'CloseRequestFcn'`: `@nazwa_funkcji` - co ma się stać po kliknięciu 'X'. u mnie logiczne ma sie skonczyć program czyli ->`@exitProgram`.
 
 2.  **`uipanel` - Kontener/Sekcja**
     *   Służy do grupowania innych elementów. `panel = uipanel('Parent', rodzic, ...)`
@@ -250,13 +244,10 @@ Tworzenie interfejsu w Octave opiera się głównie na kilku funkcjach:
 
 ---
 
-## Szkice Projektu (Historyczne)
+## strzały ekranu (screenshots)
 
 ![Wyglada to mniej wiecej tak](image.png)
-*Wczesna koncepcja układu.*
+
 
 ![LUB TAK](image-1.png)
-*Alternatywna wizja.*
 
-Aktualny kod realizuje coś zbliżonego do tych szkiców, z podziałem na panel kontrolny po lewej i symulację po prawej
->>>>>>> a0d6462461263df9f12ae277d0f42a018e87971f

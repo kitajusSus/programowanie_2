@@ -38,7 +38,7 @@ function cern_simulator
     simulationAxes = axes('Parent', simulationPanel, ...
                          'Units', 'normalized', ...
                          'Position', [0.05, 0.05, 0.9, 0.9], ...
-                         'XLim', [-10, 10], 'YLim', [-10, 10], ...
+                         'XLim', [-100, 100], 'YLim', [-100, 100], ...
                          'DataAspectRatio', [1 1 1], ...
                          'Box', 'on', 'XGrid', 'on', 'YGrid', 'on');
     title(simulationAxes, 'Symulacja ruchu cząstek na zajecia programowanie');
@@ -63,7 +63,7 @@ function cern_simulator
     % Panel przycisków sterujących
     controlButtonsPanel = uipanel('Parent', controlPanel, ...
                                 'Units', 'normalized', ...
-                                'Position', [0.05, 0.4, 0.9, 0.08], ...
+                                'Position', [0.05, 0.4, 0.9, 0.1], ...
                                 'Title', 'Sterowanie', ...
                                 'BackgroundColor', colors.panel);
 
@@ -257,7 +257,7 @@ function cern_simulator
     wykres1_button = uicontrol('Parent', controlButtonsPanel, ...
                            'Style', 'pushbutton', ...
                            'Units', 'normalized', ...
-                           'Position', [0.7, 0.2, 0.25, 0.6], ...
+                           'Position', [0.7, 0.2, 0.25, 0.25], ...
                            'String', 'Reset', ...
                            'Callback', @resetSimulation, ...
                            'BackgroundColor', colors.button);
@@ -452,6 +452,7 @@ function cern_simulator
     % Funkcja do aktualizacji parametrów cząstek z pól edycji
     function updateParticles(~, ~)
         % Odczytanie wartości z pól edycji
+        % octave odbiera te rzeczy jako string, a ja ich potrzebuje jako floaty, a przez to że używam w testach f32 co najmniej, to bedzie robic str2double
         try
             simData.particle1.mass = max(0.1, str2double(get(p1MassEdit, 'String')));
             simData.particle1.charge = str2double(get(p1ChargeEdit, 'String'));
@@ -503,7 +504,8 @@ function cern_simulator
 
     % Funkcja do aktualizacji wektorów prędkości
     function updateVelocityVectors()
-        scale = 1; % Skala wizualizacji prędkości
+        scale = 1; % Skala wizualizacji prędkości jak duzy jest wektor.
+        % używany w testach jak potrzebuje wiedzieć czy kierunek jest dobry lub czy rośnie a w wypadku gdy predkosc sie robi bliska światłu to potrzebuje znać kierunek i to czy rośnie lub  się różnią od siebie. temu mozna ustawić skale
         set(simData.p1VelocityHandle, 'XData', simData.particle1.position(1), ...
                                      'YData', simData.particle1.position(2), ...
                                      'UData', scale * simData.particle1.velocity(1), ...
@@ -535,14 +537,14 @@ function cern_simulator
 
         % Ustawienie typu interakcji
         if simData.particle1.charge * simData.particle2.charge > 0
-            interaction_type = 'ODPYCHANIE';
-            set(simData.interactionTextHandle, 'String', interaction_type, 'Color', 'red');
+            typ_oddzialowania = 'ODPYCHANIE';
+            set(simData.interactionTextHandle, 'String', typ_oddzialowania, 'Color', 'red');
         elseif simData.particle1.charge * simData.particle2.charge < 0
-            interaction_type = 'PRZYCIĄGANIE';
-            set(simData.interactionTextHandle, 'String', interaction_type, 'Color', 'green');
+            typ_oddzialowania = 'PRZYCIĄGANIE';
+            set(simData.interactionTextHandle, 'String', typ_oddzialowania, 'Color', 'green');
         else
-            interaction_type = 'BRAK INTERAKCJI';
-            set(simData.interactionTextHandle, 'String', interaction_type, 'Color', 'black');
+            typ_oddzialowania = 'BRAK INTERAKCJI';
+            set(simData.interactionTextHandle, 'String', typ_oddzialowania, 'Color', 'black');
         end
     end
 
@@ -663,7 +665,7 @@ function cern_simulator
 
         % Sprawdzanie kolizji między cząstkami
         distance = norm(simData.particle1.position(1:2) - simData.particle2.position(1:2));
-        kolizja_gdy = simData.particle1.mass + simData.particle2.mass;
+        kolizja_gdy = (simData.particle1.mass + simData.particle2.mass)/2;
 
          %zderzenia
         if distance <= kolizja_gdy
