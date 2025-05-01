@@ -41,7 +41,7 @@ function cern_simulator
                          'XLim', [-10, 10], 'YLim', [-10, 10], ...
                          'DataAspectRatio', [1 1 1], ...
                          'Box', 'on', 'XGrid', 'on', 'YGrid', 'on');
-    title(simulationAxes, 'Symulacja ruchu cząstek');
+    title(simulationAxes, 'Symulacja ruchu cząstek na zajecia programowanie');
     xlabel(simulationAxes, 'X');
     ylabel(simulationAxes, 'Y');
 
@@ -353,14 +353,14 @@ function cern_simulator
                           'String', '0 J', ...
                           'HorizontalAlignment', 'left', ...
                           'BackgroundColor', 'white');
-    % --- ZMIENNE GLOBALNE dla funkcji ---
+    % --- ZMIENNE GLOBALNE dla funkcji TWORZENIE STRUKTÓR DANYCH DLA OBU PARTICLES---
     simData = struct();
     simData.particle1 = createParticle(1.0, [-0.000001, 0, 0], [0, 0, 0], 'p1', 0.0000000002);
-    simData.particle2 = createParticle(2.0, [0.000002, 0, 0], [0, 0, 0], 'p2', -0.000000001);
+    simData.particle2 = createParticle(1.0, [0.000002, 0, 0], [0, 0, 0], 'p2', -0.000000001);
     simData.isRunning = false;
     simData.time = 0;
-    simData.dt = 0.05;
-    simData.historyLength = 20;
+    simData.dt = 0.1;
+    simData.historyLength = 50;% pokazuje 20 ostatnich dt jako ślad za kulką
     simData.p1History = zeros(simData.historyLength, 2);
     simData.p2History = zeros(simData.historyLength, 2);
 
@@ -445,9 +445,10 @@ function cern_simulator
         F_mag = k * (p1.charge * p2.charge) / (r_mag^2);
 
         % Wektor siły: dodatni - przyciąganie, ujemny - odpychanie
-        F_vec = F_mag * r_unit;
+        F_vec = -F_mag * r_unit;
+        
     end
-
+% dzięki Bogu istnieje copilot który zrobi za mnie mozolne pisanie, troche było do zmiany  te str2double ale generalnie polecam
     % Funkcja do aktualizacji parametrów cząstek z pól edycji
     function updateParticles(~, ~)
         % Odczytanie wartości z pól edycji

@@ -73,7 +73,6 @@ Oczywiście jest to poprzedzone czymś w rodzaju kontruktora z cpp. Czyli Clasa 
 ```
 3. Tworzenie `Particles`: 
 [Cern simulator testowanie tworzenie obiektów](tests/adding_obj.m) W tym pliku tworzyłem obiekty na bazie inputu uzytkownika i sprawdzałem jak się zmieniają w czasie.
-- potem planuje by móc w gui za pomocą suwaków generować i zmieniać cechy obiektów. (cząstek.Particles)
 - Trzeba sprawdzać rozmiar tych cząstek by razem z położeniem środka śledzić promień i jeśli odleglość pomiędzy $r_1 + r_2 <= d$ uruchomić program do odbijania. czy coś takiego [Dodałem sprawdzanie tego](tests/adding_obj.m)
 - Zachowanie pędu, zderzenia, liczenie energii przy zderzeniu, 
 
@@ -123,19 +122,59 @@ $$p = 1 + 2x + 2x^2 + 5x^3$$
 ![LUB TAK](image-1.png)
 
 
-<<<<<<< HEAD
 
-=======
+
+
 1.  **Etap 1: Matematyka i Fizyka (Zrobione)**
     *   **Zachowanie pędu i energii:** Wzory na zderzenia sprężyste są zaimplementowane w funkcji `updateSimulation` w sekcji kolizji cząstek. Suma energii kinetycznej jest śledzona w panelu informacyjnym (choć sama energia potencjalna nie jest liczona, więc suma kinetycznej nie musi być stała).
     *   **Siła Coulomba:** Obliczana w funkcji `calcCoulomb`.
     *   **Ruch:** Prosta metoda Eulera (`v = v + a*dt`, `p = p + v*dt`) w `updateSimulation`.
 
 2.  **Etap 2: Podstawy Kodu (Zrobione)**
-    *   **Struktura danych:** Zamiast klas, używamy struktury `simData` do trzymania wszystkiego (stan cząstek, flagi, uchwyty GUI). To upraszcza przekazywanie danych między funkcjami zagnieżdżonymi.
-    *   **Funkcje pomocnicze:** `createParticle`, `calcCoulomb`, `update...` - rozbijają logikę na mniejsze kawałki.
+    *   **Struktura danych:** jednak  wyrąbane w te klasy używamy, struktury `struct()`  o nazwie `simData` do trzymania wszystkiego (stan cząstek, flagi, uchwyty GUI). To upraszcza przekazywanie danych między funkcjami w srodku.
+```matlab
+simData = struct()
+% następnie by łatwiej funkcjonować octave robi dodatkowe elementy np. 
+simData.particle1 = createParticle( "wstaw tutaj dane potrzebne do funkcji ");
+simData.kochamMatiego = true;
+simData.nazwa = "skibidi";
 
-3.  **Etap 3: Tworzenie GUI (Zrobione - to ten kod!)**
+```
+Po tych wszytkich ustawieniach i zabiegach mamy coś takieg gdzie `simData` posiada następujące miejsca którym nadaje się wartośći
+```matlab
+simData ={
+    particle1,
+    kochamMatiego,
+    nazwa,
+}
+```
+Octave samodzielnie tworzy brakujące pola do dodawania wiec nie trzeba się przejmować by je stworzyć ale lepiej pilnować **nazw**.
+
+A dodatkowo prosze zobaczyć jak robię w pliku [Particle.m](particle.m przy uzyciu classy)
+
+Dzięki tej formie zapisu danych (czyli uzycie klasy do zbudowania particle1 i 2) można łatwo je edyutować jako element `simData` i nie trzeba się martwić o to że coś się zepsuje.
+
+```matlab 
+% tak naprawde sim data wygląda w taki sposób w środku
+simData{
+    particle1{
+        mass: ,
+        charge: ,
+        position: [],
+        velocity: [],
+    },
+    kochamMatiego,
+    nazwa,
+}
+% wiec poprzez
+simData.particle1.mass = 2.6;
+%moge zmieniać konkretne lementy w particle1
+
+```
+
+*   **Funkcje pomocnicze:** `createParticle`, `calcCoulomb`, `update...`  isnieją i mają się dobrze, są odpowiedzialne za oblicznanie rzeczy. 
+
+3.  **Etap 3: Tworzenie GUI (Zrobione)**
     *   **Główne okno (`figure`):** Ustawienie rozmiaru, tytułu, funkcji zamykania.
     *   **Panele (`uipanel`):** Podział okna na logiczne sekcje (kontrola, symulacja, ustawienia cząstek, przyciski, info). Ułatwia organizację.
     *   **Kontrolki (`uicontrol`):**
