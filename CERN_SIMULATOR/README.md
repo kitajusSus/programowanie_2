@@ -289,4 +289,8 @@ Tworzenie interfejsu w Octave opiera się głównie na kilku funkcjach:
 [wykresy plik](wykresy.m)
 Plik ten ma za zadanie być wywoływany przez  przycisk wykresy w [main](cern_simulator.m) i ma otwierać okno edycji wykresów
 
+planuje by to zrobić tak 
 
+1. przycisk otwiera okno do wyboru tego co jest na której osi. 
+2. następnie dodaje się wykres na spodzie pod symulacją i aktualizuje się na bierząco co `dt`
+3. problem jak to zrobić by funkcja i zewnętrzny kod wiedział jak aktuliazować dane na wykresie w real time
