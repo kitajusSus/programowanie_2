@@ -144,9 +144,9 @@ simData ={
 ```
 Octave samodzielnie tworzy brakujące pola do dodawania wiec nie trzeba się przejmować by je stworzyć ale lepiej pilnować **nazw**.
 
-A dodatkowo prosze zobaczyć jak robię w pliku [Particle.m](particle.m przy uzyciu classy)
+A dodatkowo prosze zobaczyć jak robię w pliku (Particle.m)[particle.m przy uzyciu classy]
 
-Dzięki tej formie zapisu danych (czyli uzycie klasy do zbudowania particle1 i 2) można łatwo je edyutować jako element `simData` i nie trzeba się martwić o to że coś się zepsuje.
+Dzięki tej formie zapisu danych (czyli uzycie struktury a nie klasy do zbudowania particle1 i 2) można łatwo je edyutować jako element `simData` i nie trzeba się martwić o to że coś się zepsuje.
 
 ```matlab 
 % tak naprawde sim data wygląda w taki sposób w środku
