@@ -169,12 +169,38 @@ simData.particle1.mass = 2.6;
 *   **Funkcje pomocnicze:** `createParticle`, `calcCoulomb`, `update...`  isnieją i mają się dobrze, są odpowiedzialne za oblicznanie rzeczy. 
 
 3.  **Etap 3: Tworzenie GUI (Zrobione)**
-    *   **Główne okno (`figure`):** Ustawienie rozmiaru, tytułu, funkcji zamykania.
-    *   **Panele (`uipanel`):** Podział okna na logiczne sekcje (kontrola, symulacja, ustawienia cząstek, przyciski, info). Ułatwia organizację.
+    -   **Główne okno (`figure`):** Ustawienie rozmiaru, tytułu, funkcji zamykania.
+    ```matlab
+    fig = figure('Name', 'CERN Simulator', 
+                'Position', [100, 100, 800, 600], 
+                'MenuBar', 'none', 
+                'NumberTitle', 'off', 
+                'CloseRequestFcn', @exitProgram);
+    % dla kogoś kto ogarnia octave nie powinno być problemu
+    ```
+    -   **Panele (`uipanel`):** Podział okna na logiczne sekcje (kontrola, symulacja, ustawienia cząstek, przyciski, info). Ułatwia organizację.
+   
+    *a) Jak zrobić panel???*
+    ```matlab
+        % Panel cząstki 1
+    p1Panel = uipanel('Parent', controlPanel, ...
+                     'Units', 'normalized', ...
+                     'Position', [0.05, 0.76, 0.9, 0.2], ...
+                     'Title', 'Cząstka 1 (czerwona)', ...
+                     'BackgroundColor', colors.panel);'
+
+        % nic szczególnego, by łatwiej segregować elementy gui ustawiam panel do którego będą łączyć się elementy tego panelu, 
+    %przez co jak przesunę ten panel to 
+    % przesuną się wszystkie elementy w nim zawarte 
+    % ale trzeba pamietać by wpisywać w tych children panels pozycje w kontekscie rodzica ponela
+    
+    ```
+    Gdziekolwiek nie zrobie panelu to jest tam wpisane `'Units' , 'normalized'` co oznacza ze wartośći parametrów tj. szerokość, wysokość itd.  są podawane jako "%" odległości w stounku do `parentPanel`
+
     *   **Kontrolki (`uicontrol`):**
-        *   `'Style', 'text'`: Etykiety opisujące inne kontrolki lub wyświetlające dane.
-        *   `'Style', 'edit'`: Pola do wprowadzania wartości przez użytkownika (masa, ładunek, prędkość, pozycja). Mają ustawioną funkcję zwrotną (`'Callback', @updateParticles`), która odpala się po zmianie wartości.
-        *   `'Style', 'pushbutton'`: Przyciski (Start, Stop, Reset). Też mają swoje funkcje zwrotne (`@startSimulation`, `@stopSimulation`, `@resetSimulation`).
+        -   `'Style', 'text'`: Etykiety opisujące inne kontrolki lub wyświetlające dane.
+        -   `'Style', 'edit'`: Pola do wprowadzania wartości przez użytkownika (masa, ładunek, prędkość, pozycja). Mają ustawioną funkcję zwrotną (`'Callback', @updateParticles`), która odpala się po zmianie wartości.
+        -   `'Style', 'pushbutton'`: Przyciski (Start, Stop, Reset). Też mają swoje funkcje zwrotne (`@startSimulation`, `@stopSimulation`, `@resetSimulation`).
     *   **Obszar rysowania (`axes`):** Miejsce w panelu symulacji, gdzie rysujemy cząstki, trajektorie i wektory. Ma ustawione granice (`XLim`, `YLim`) i proporcje (`DataAspectRatio`).
     *   **Grafika (`plot`, `quiver`, `text`):**
         *   `plot(..., 'o')`: Rysuje markery cząstek. Uchwyty (`p1Handle`, `p2Handle`) pozwalają zmieniać ich pozycję (`XData`, `YData`) i rozmiar (`MarkerSize`).
@@ -183,9 +209,9 @@ simData.particle1.mass = 2.6;
         *   `text(...)`: Wyświetla tekst (np. typ interakcji) na obszarze rysowania.
 
 4.  **Etap 4: Połączenie Logiki z GUI (Zrobione)**
-    *   **Pętla symulacji (`timerLoop`, `updateSimulation`):** Serce programu. Działa w tle (dzięki `pause` i `drawnow`), liczy fizykę i regularnie aktualizuje stan w `simData`.
-    *   **Aktualizacja GUI:** Funkcje `update...` (np. `updateVelocityVectors`, `updateSimulationData`) oraz bezpośrednie komendy `set(...)` w `updateSimulation` zmieniają wygląd kontrolek i grafiki na podstawie danych w `simData`.
-    *   **Interakcja użytkownika:** Callbacki przycisków (`startSimulation`, ...) i pól edycji (`updateParticles`) modyfikują `simData` (np. zmieniają `simData.isRunning` lub wartości parametrów cząstek) i odpalają odpowiednie akcje.
+    -   **Pętla symulacji (`timerLoop`, `updateSimulation`):** Serce programu. Działa w tle (dzięki `pause` i `drawnow`), liczy fizykę i regularnie aktualizuje stan w `simData`.
+    -   **Aktualizacja GUI:** Funkcje `update...` (np. `updateVelocityVectors`, `updateSimulationData`) oraz bezpośrednie komendy `set(...)` w `updateSimulation` zmieniają wygląd kontrolek i grafiki na podstawie danych w `simData`.
+    -   **Interakcja użytkownika:** Callbacki przycisków (`startSimulation`, ...) i pól edycji (`updateParticles`) modyfikują `simData` (np. zmieniają `simData.isRunning` lub wartości parametrów cząstek) i odpalają odpowiednie akcje.
 
 ---
 
@@ -205,7 +231,15 @@ Tworzenie interfejsu w Octave opiera się głównie na kilku funkcjach:
     *   Służy do grupowania innych elementów. `panel = uipanel('Parent', rodzic, ...)`
     *   `'Parent'`: Do jakiego okna (`figure`) lub innego panelu należy ten panel.
     *   `'Title'`: Napis na ramce panelu.
-    *   `'Position'`: Położenie i rozmiar *wewnątrz rodzica*. Jeśli rodzic ma `'Units', 'normalized'`, to i tu warto użyć `'normalized'`.
+    *   `'Position'`: Położenie i rozmiar *wewnątrz rodzica*.
+   ```matlab
+   'Position', [0.05, 0.4, 0.9, 0.15]
+    ```
+>   **`0.05`**: Lewy dolny róg panelu znajduje się 5% szerokości panelu od lewej krawędzi.
+    **`0.4`**: Lewy dolny róg panelu znajduje się 40% wysokości  panelu od dolnej krawędzi.
+    **`0.9`**: Panel zajmuje 90% szerokości panelu.
+    **`0.15`**: Panel zajmuje 15% wysokości panelu.
+
     *   `'BackgroundColor'`: Kolor tła.
 
 3.  **`axes` - Obszar Wykresu**
@@ -240,7 +274,6 @@ Tworzenie interfejsu w Octave opiera się głównie na kilku funkcjach:
     *   W pętli symulacji (`timerLoop`) `drawnow()` wymusza odświeżenie okna GUI, żeby zmiany były widoczne.
     *   `pause(dt)` wprowadza opóźnienie, kontrolując szybkość symulacji i dając GUI czas na reakcję.
 
-**Podsumowując:** Układasz elementy w oknie (`figure`, `uipanel`, `axes`, `uicontrol`), nadajesz im właściwości (rozmiar, pozycję, tekst, styl). Zapisujesz uchwyty do elementów, które będziesz zmieniać. Piszesz funkcje (`callbacki`), które reagują na akcje użytkownika lub postęp symulacji. W tych funkcjach używasz `get()` do odczytu danych z GUI i `set()` do aktualizacji wyglądu GUI. Całość spinasz pętlą z `drawnow()` i `pause()`. Chaotyczne? Może trochę, ale działa!
 
 ---
 
@@ -250,4 +283,10 @@ Tworzenie interfejsu w Octave opiera się głównie na kilku funkcjach:
 
 
 ![LUB TAK](image-1.png)
+
+
+# wykresy.m 
+[wykresy plik](wykresy.m)
+Plik ten ma za zadanie być wywoływany przez  przycisk wykresy w [main](cern_simulator.m) i ma otwierać okno edycji wykresów
+
 
