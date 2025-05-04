@@ -232,9 +232,11 @@ Tworzenie interfejsu w Octave opiera się głównie na kilku funkcjach:
     *   `'Parent'`: Do jakiego okna (`figure`) lub innego panelu należy ten panel.
     *   `'Title'`: Napis na ramce panelu.
     *   `'Position'`: Położenie i rozmiar *wewnątrz rodzica*.
-   ```matlab
+
+```matlab
    'Position', [0.05, 0.4, 0.9, 0.15]
-    ```
+```
+
 >   **`0.05`**: Lewy dolny róg panelu znajduje się 5% szerokości panelu od lewej krawędzi.
     **`0.4`**: Lewy dolny róg panelu znajduje się 40% wysokości  panelu od dolnej krawędzi.
     **`0.9`**: Panel zajmuje 90% szerokości panelu.
