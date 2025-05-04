@@ -56,14 +56,14 @@ function cern_simulator
     % Panel cząstki 2
     p2Panel = uipanel('Parent', controlPanel, ...
                      'Units', 'normalized', ...
-                     'Position', [0.05, 0.52, 0.9, 0.2], ...
+                     'Position', [0.05, 0.54, 0.9, 0.2], ...
                      'Title', 'Cząstka 2 (niebieska)', ...
                      'BackgroundColor', colors.panel);
 
     % Panel przycisków sterujących
     controlButtonsPanel = uipanel('Parent', controlPanel, ...
                                 'Units', 'normalized', ...
-                                'Position', [0.05, 0.4, 0.9, 0.15], ...
+                                'Position', [0.05, 0.38, 0.9, 0.15], ...
                                 'Title', 'Sterowanie', ...
                                 'BackgroundColor', colors.panel);
 
@@ -361,11 +361,17 @@ function cern_simulator
     simData.particle2 = createParticle(1.0, [0.000002, 0, 0], [0, 0, 0], 'p2', -0.000000001);
     simData.isRunning = false;
     simData.time = 0;
-    simData.dt = 0.15;
+    simData.dt = 0.05;
     simData.historyLength = 50;% pokazuje 20 ostatnich dt jako ślad za kulką
     simData.p1History = zeros(simData.historyLength, 2);
     simData.p2History = zeros(simData.historyLength, 2);
-
+%  puste elementy struktury simData do robienia wykresów
+    simData.wykres_osie = [];       % Uchwyt do osi wykresu (jeśli istnieje)
+    simData.plotXVarID = '';        % oś X
+    simData.plotYVarID = '';        % zmiennej Y
+    simData.plotXHistory = [];      % Historia X
+    simData.plotYHistory = [];      % Historia Y
+    simData.maxPlotHistory = 500;   % Maksymalna długość historii wykresu
     % Inicjalizacja grafiki cząstek
     hold(simulationAxes, 'on');
 
@@ -563,27 +569,82 @@ function cern_simulator
         % Obliczanie pędów
         p1 = simData.particle1.mass * simData.particle1.velocity(1:2);
         p2 = simData.particle2.mass * simData.particle2.velocity(1:2);
-
+        totalEnergy = E1+E2;
         % Aktualizacja pól tekstowych
         set(forceText, 'String', sprintf('%.3e N', F_mag));
         set(energy1Text, 'String', sprintf('%.3e J', E1));
         set(energy2Text, 'String', sprintf('%.3e J', E2));
-        set(energySuma, 'String', sprintf('%.3e J', E1+E2));
+        set(energySuma, 'String', sprintf('%.3e J', totalEnergy));
         set(momentum1Text, 'String', sprintf('[%.3f, %.3f]', p1(1), p1(2)));
         set(momentum2Text, 'String', sprintf('[%.3f, %.3f]', p2(1), p2(2)));
         
-        if isfield(simData, 'wykresy')
+        if isfield(simData, 'wykresy_osie')
           disp("wykresy pełne");  
         end
     end
 
     function dodaj_wykresy(~,~)
-      disp("dodawanie wykresów i robienie miejsca");
+      %disp("dodawanie wykresów i robienie miejsca");
       positionsInfo = get(simulationPanel, 'Position');
       set(simulationPanel, 'Position', [positionsInfo(1), 0.30, positionsInfo(3), 0.70]);
+      wykresPanel =  uipanel('Parent', fig, ...
+                            'Units', 'normalized',...
+                            'Position', [0.30, 0.01, 0.69, 0.30], ...
+                            'Title', 'wykresy panel', ...
+                            'BackgroundColor', colors.panel);
+      wykresOpcjePanel = uipanel('Parent', wykresPanel, ...
+                                'Units', 'normalized', ...
+                                'Position', [0.01, 0.05, 0.20,0.95]
+                                );
+      wykres_osie = axes('Parent', wykresPanel, ...
+                        'Units', 'normalized', ...
+                        'Position', [0.30, 0.01, 0.90, 0.95]);
+      simData.wykres_osie = wykres_osie;
 
+      % dodawanie przycisków do definiowania co jest na której osi.
       
+      opcje_do_wyboru = {
+        'Czas',             'time';
+        'Energia Całk.',    'totalEnergy';
+        'Energia cz. 1',    'E1';
+        'Energia cz. 2',    'E2';
+        'SiłaCoulomba',   'F_mag';
+        'Pręd. 1',    'predkosc1';
+        'Pręd. 2',    'predkosc2';
+        'Odległość',        'distance'
+    };
+    plotNazwy = opcje_do_wyboru(:, 1); % Nazwy dla użytkownika
+    plotZmienne = opcje_do_wyboru(:, 2);   % nazwy zmiennych
+    simData.plotNazwy = plotNazwy;
+    simData.plotZmienne = plotZmienne;
+    % Etykieta i lista rozwijana dla osi X
+    uicontrol('Parent', wykresOpcjePanel, 'Style', 'text', ...
+              'Units', 'normalized', 'Position', [0.05, 0.6, 0.2, 0.25], ...
+              'String', 'Oś X:', 'HorizontalAlignment', 'left');
+    xWykresPopup = uicontrol('Parent', wykresOpcjePanel, 'Style', 'popupmenu', ...
+                         'Units', 'normalized', 'Position', [0.3, 0.6, 0.65, 0.25], ...
+                         'String', plotNazwy,
+                         'Value', 1, ... % 
+                         'BackgroundColor', 'white');
+    % Etykieta i lista rozwijana dla osi X
+    uicontrol('Parent', wykresOpcjePanel, 'Style', 'text', ...
+              'Units', 'normalized', 'Position', [0.05, 0.30, 0.2, 0.25], ...
+              'String', 'oś y:', 'HorizontalAlignment', 'left');
+    yWykresPopup = uicontrol('Parent', wykresOpcjePanel, 'Style', 'popupmenu', ...
+                         'Units', 'normalized', 'Position', [0.3, 0.3, 0.65, 0.25], ...
+                         'String', plotNazwy,
+                         'Value', 1, ... % Domyślnie 'Czas'
+                         'BackgroundColor', 'white'); 
+    simData.wykresX = get(xWykresPopup, 'Value');
+    simData.wykresY = get(yWykresPopup, 'Value');
+      edycjaWykres();
     end
+   %% funkcja do edyutowania wykresu i sprawdzania co nowego, dodawanie i zmienianie wykresu + edycja osi () 
+    function edycjaWykres(~,~)
+      x = simData.wykresX;
+      y = simData.wykresY;
+    end 
+
     % Funkcja do uruchamiania symulacji
     function startSimulation(~, ~)
         if ~simData.isRunning
