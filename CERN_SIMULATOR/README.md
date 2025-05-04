@@ -445,5 +445,4 @@ graph TD
         ExitP -- wywołuje --> StopSim;
         ExitP -- zamyka --> B;
     end
-
 ```
