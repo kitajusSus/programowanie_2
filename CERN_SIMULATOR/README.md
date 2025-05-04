@@ -114,7 +114,7 @@ $$p = 1 + 2x + 2x^2 + 5x^3$$
 
 **Projekt masz narysowany w zeszycie do optyki na koncu.**
 **A zdjęcia są na dole dokumentacji**
-[##strzały ekranu](O tutaj )
+[strzały ekranu](## strzały ekranu)
 
 
 
@@ -122,7 +122,7 @@ $$p = 1 + 2x + 2x^2 + 5x^3$$
 1.  **Etap 1: Matematyka i Fizyka (Zrobione)**
     *   **Zachowanie pędu i energii:** Wzory na zderzenia sprężyste są zaimplementowane w funkcji `updateSimulation` w sekcji kolizji cząstek. Suma energii kinetycznej jest śledzona w panelu informacyjnym (choć sama energia potencjalna nie jest liczona, więc suma kinetycznej nie musi być stała).
     *   **Siła Coulomba:** Obliczana w funkcji `calcCoulomb`.
-    *   **Ruch:** Prosta metoda Eulera (`v = v + a*dt`, `p = p + v*dt`) w `updateSimulation`.
+    *   **Ruch:** (`v = v + a*dt`, `p = p + v*dt`) w `updateSimulation`.
 
 2.  **Etap 2: Podstawy Kodu (Zrobione)**
     *   **Struktura danych:** jednak  wyrąbane w te klasy używamy, struktury `struct()`  o nazwie `simData` do trzymania wszystkiego (stan cząstek, flagi, uchwyty GUI). To upraszcza przekazywanie danych między funkcjami w srodku.
@@ -279,7 +279,7 @@ Tworzenie interfejsu w Octave opiera się głównie na kilku funkcjach:
 
 ---
 
-## strzały ekranu (screenshots)
+## strzały ekranu
 
 ![Wyglada to mniej wiecej tak](image.png)
 
@@ -295,4 +295,13 @@ planuje by to zrobić tak
 
 1. przycisk otwiera okno do wyboru tego co jest na której osi. 
 2. następnie dodaje się wykres na spodzie pod symulacją i aktualizuje się na bierząco co `dt`
+- wiec musze  zrobić to w update plot funkcji ponieważ musi się aktualizować razem z wszystkium
+- moge skorzystać z funkcji `isfield` do sprawdzania czy  wykres istnieje w `simData` [link do projektu github](https://github.com/ndtatbristol/brain1/blob/439d359200c942bfa330a3b6ebd0b7e6bfe5b788/gui_1d_plot_panel.m) 
+- albo inaczej lekko, funkcja do sprawdzania bedzie istnieć, ale narazie skupie się by po wciśnięciu przycisku  `wykres`  zmienić rozmiar tego okna na rzeczy i zrobić mijesce na wyrkes
 3. problem jak to zrobić by funkcja i zewnętrzny kod wiedział jak aktuliazować dane na wykresie w real time
+
+
+## dodanie miejsca
+Dobra dodałem funkcję `dodaj_wykresy`   robi ona miejsce na plot wykresów
+zmiena ona parametry simulationPanel by przesunąć go do góry
+

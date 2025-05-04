@@ -34,7 +34,7 @@ function cern_simulator
                             'Title', 'panel simulations ', ...
                             'BackgroundColor', colors.panel);
 
-    % wykres
+    % wykres symulacji
     simulationAxes = axes('Parent', simulationPanel, ...
                          'Units', 'normalized', ...
                          'Position', [0.05, 0.05, 0.9, 0.9], ...
@@ -260,7 +260,7 @@ function cern_simulator
                            'Units', 'normalized', ...
                            'Position', [0.7, 0.10, 0.25, 0.30], ...
                            'String', 'Wykresy', ...
-                           'Callback', @wykresy, ...
+                           'Callback', @dodaj_wykresy, ...
                            'BackgroundColor', colors.button);
     % --- PANEL INFORMACYJNY ---
 
@@ -291,6 +291,7 @@ function cern_simulator
                           'BackgroundColor', 'white');
 
     % Energia kinetyczna cząstki 2
+% zwykły blok tekstu
     uicontrol('Parent', infoPanel, 'Style', 'text', ...
              'Units', 'normalized', ...
              'Position', [0.05, 0.57, 0.35, 0.12], ...
@@ -400,7 +401,8 @@ function cern_simulator
     updateParticles();
 
     % ===== FUNKCJE POMOCNICZE =====
-
+     
+        
     % Funkcja do resetowania symulacji
     function resetSimulation(~, ~)
         stopSimulation();
@@ -410,12 +412,12 @@ function cern_simulator
     end
 
     % Funkcja tworząca cząstkę
-    function particle = createParticle(mass, position, velocity, type, charge)
+    function particle = createParticle(mass, position, velocity, rodzaj, charge)
         particle = struct();
         particle.mass = mass;
         particle.position = position;
         particle.velocity = velocity;
-        particle.type = type;
+        particle.type = rodzaj;
         particle.charge = charge;
     end
 
@@ -569,8 +571,19 @@ function cern_simulator
         set(energySuma, 'String', sprintf('%.3e J', E1+E2));
         set(momentum1Text, 'String', sprintf('[%.3f, %.3f]', p1(1), p1(2)));
         set(momentum2Text, 'String', sprintf('[%.3f, %.3f]', p2(1), p2(2)));
+        
+        if isfield(simData, 'wykresy')
+          disp("wykresy pełne");  
+        end
     end
 
+    function dodaj_wykresy(~,~)
+      disp("dodawanie wykresów i robienie miejsca");
+      positionsInfo = get(simulationPanel, 'Position');
+      set(simulationPanel, 'Position', [positionsInfo(1), 0.30, positionsInfo(3), 0.70]);
+
+      
+    end
     % Funkcja do uruchamiania symulacji
     function startSimulation(~, ~)
         if ~simData.isRunning
