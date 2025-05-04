@@ -317,38 +317,40 @@ Teraz skupię się na funkcji `edycjaWykres` która bedzie odpowiadać za zmiane
 
 # projekt 
 juz sobie nie radziłem i llm przygotował mi schemat wszystkiego 
+
+
 ```mermaid
 graph TD
     subgraph Legenda
         direction LR
-        L1[Funkcja] --> L2{Interfejs Użytkownika};
-        L2 --> L3[(Struktura Danych)];
-        L3 --> L4((Obiekt Graficzny));
-        L4 --> L5{Decyzja / Pętla};
+        L1["Funkcja"] --> L2["Interfejs Użytkownika"];
+        L2 --> L3["Struktura Danych"];
+        L3 --> L4["Obiekt Graficzny"];
+        L4 --> L5["Decyzja / Pętla"];
     end
 
     subgraph "Inicjalizacja i Główne Komponenty"
-        A(cern_simulator) -- tworzy --> B{Główne Okno (fig)};
-        A -- tworzy --> C{Panele Główne};
-        C -- zawiera --> CP{Panel Kontrolny};
-        C -- zawiera --> SP{Panel Symulacji};
-        SP -- zawiera --> SA((Oś Symulacji - simulationAxes));
-        CP -- zawiera --> P1P{Panel Cz. 1};
-        CP -- zawiera --> P2P{Panel Cz. 2};
-        CP -- zawiera --> CBP{Panel Sterowania};
-        CP -- zawiera --> IP{Panel Info};
-        A -- inicjalizuje --> SD[(simData)];
-        A -- tworzy --> GFX((Grafika Początkowa: Cząstki, Wektory, Trajektorie));
-        A -- wywołuje na końcu --> UP[updateParticles];
+        A[cern_simulator] -- tworzy --> B["Główne Okno (fig)"];
+        A -- tworzy --> C["Panele Główne"];
+        C -- zawiera --> CP["Panel Kontrolny"];
+        C -- zawiera --> SP["Panel Symulacji"];
+        SP -- zawiera --> SA["Oś Symulacji - simulationAxes"];
+        CP -- zawiera --> P1P["Panel Cz. 1"];
+        CP -- zawiera --> P2P["Panel Cz. 2"];
+        CP -- zawiera --> CBP["Panel Sterowania"];
+        CP -- zawiera --> IP["Panel Info"];
+        A -- inicjalizuje --> SD["simData"];
+        A -- tworzy --> GFX["Grafika Początkowa: Cząstki, Wektory, Trajektorie"];
+        A -- wywołuje na końcu --> UP["updateParticles"];
     end
 
     subgraph "Interakcja Użytkownika - Kontrolki"
-        P1Edits{Pola Edycji Cz. 1} -- zmiana wartości --> UP_CB(Callback: @updateParticles);
-        P2Edits{Pola Edycji Cz. 2} -- zmiana wartości --> UP_CB;
-        StartBtn{Przycisk Start} -- klik --> StartSim[startSimulation];
-        StopBtn{Przycisk Stop} -- klik --> StopSim[stopSimulation];
-        ResetBtn{Przycisk Reset} -- klik --> ResetSim[resetSimulation];
-        WykresyBtn{Przycisk Wykresy} -- klik --> DodajWyk[dodaj_wykresy];
+        P1Edits["Pola Edycji Cz. 1"] -- zmiana wartości --> UP_CB["Callback: @updateParticles"];
+        P2Edits["Pola Edycji Cz. 2"] -- zmiana wartości --> UP_CB;
+        StartBtn["Przycisk Start"] -- klik --> StartSim["startSimulation"];
+        StopBtn["Przycisk Stop"] -- klik --> StopSim["stopSimulation"];
+        ResetBtn["Przycisk Reset"] -- klik --> ResetSim["resetSimulation"];
+        WykresyBtn["Przycisk Wykresy"] -- klik --> DodajWyk["dodaj_wykresy"];
 
         UP_CB -- wywołuje --> UP;
     end
@@ -356,48 +358,48 @@ graph TD
     subgraph "Aktualizacja Parametrów Cząstek"
         UP -- odczytuje --> P1Edits;
         UP -- odczytuje --> P2Edits;
-        UP -- modyfikuje --> SD_P1P2(simData.particle1/2 .mass/.charge/.vel/.pos);
-        UP -- modyfikuje --> SD_Hist(simData.p1/p2History);
-        UP -- aktualizuje --> GFX_Size((Rozmiar Markerów));
-        UP -- aktualizuje --> GFX_Pos((Pozycja Markerów));
-        UP -- aktualizuje --> GFX_Traj((Reset Trajektorii));
-        UP -- wywołuje --> UVV[updateVelocityVectors];
-        UP -- wywołuje --> UFV[updateForceVectors];
-        UP -- wywołuje --> USD[updateSimulationData];
-        UP -- resetuje --> SD_Time(simData.time = 0);
-        UP -- aktualizuje --> TimeTxt{Pole Czasu};
+        UP -- modyfikuje --> SD_P1P2["simData.particle1/2 .mass/.charge/.vel/.pos"];
+        UP -- modyfikuje --> SD_Hist["simData.p1/p2History"];
+        UP -- aktualizuje --> GFX_Size["Rozmiar Markerów"];
+        UP -- aktualizuje --> GFX_Pos["Pozycja Markerów"];
+        UP -- aktualizuje --> GFX_Traj["Reset Trajektorii"];
+        UP -- wywołuje --> UVV["updateVelocityVectors"];
+        UP -- wywołuje --> UFV["updateForceVectors"];
+        UP -- wywołuje --> USD["updateSimulationData"];
+        UP -- resetuje --> SD_Time["simData.time = 0"];
+        UP -- aktualizuje --> TimeTxt["Pole Czasu"];
     end
 
     subgraph "Sterowanie Symulacją"
-        StartSim -- ustawia --> SD_Run(simData.isRunning = true);
-        StartSim -- wywołuje --> Loop{timerLoop};
-        StopSim -- ustawia --> SD_Run(simData.isRunning = false);
+        StartSim -- ustawia --> SD_Run["simData.isRunning = true"];
+        StartSim -- wywołuje --> Loop["timerLoop"];
+        StopSim -- ustawia --> SD_Run["simData.isRunning = false"];
         ResetSim -- wywołuje --> StopSim;
         ResetSim -- wywołuje --> UP;
-        ResetSim -- resetuje --> SD_Time(simData.time = 0);
+        ResetSim -- resetuje --> SD_Time["simData.time = 0"];
         ResetSim -- aktualizuje --> TimeTxt;
     end
 
     subgraph "Pętla Symulacji"
-        Loop -- warunek: simData.isRunning --> USim[updateSimulation];
-        Loop -- po updateSimulation --> Draw(drawnow);
-        Loop -- po drawnow --> Pause(pause(simData.dt));
+        Loop -- warunek: simData.isRunning --> USim["updateSimulation"];
+        Loop -- po updateSimulation --> Draw["drawnow"];
+        Loop -- po drawnow --> Pause["pause(simData.dt)"];
         Pause -- wraca do --> Loop;
 
-        USim -- zwiększa --> SD_Time(simData.time);
+        USim -- zwiększa --> SD_Time["simData.time"];
         USim -- aktualizuje --> TimeTxt;
-        USim -- wywołuje --> CC[calcCoulomb];
+        USim -- wywołuje --> CC["calcCoulomb"];
         USim -- odczytuje --> SD_P1P2;
-        USim -- modyfikuje --> SD_P1P2_VelPos(simData.particle1/2 .velocity/.position);
-        USim -- sprawdza/modyfikuje --> SD_P1P2_VelPos -- Odbicia od ścian;
-        USim -- sprawdza/modyfikuje --> SD_P1P2_VelPos -- Kolizje;
+        USim -- modyfikuje --> SD_P1P2_VelPos["simData.particle1/2 .velocity/.position"];
+        USim -- sprawdza/modyfikuje --> SD_P1P2_VelPos -- "Odbicia od ścian";
+        USim -- sprawdza/modyfikuje --> SD_P1P2_VelPos -- "Kolizje";
         USim -- aktualizuje --> GFX_Pos;
         USim -- modyfikuje --> SD_Hist;
-        USim -- aktualizuje --> GFX_Traj_Draw((Rysowanie Trajektorii));
+        USim -- aktualizuje --> GFX_Traj_Draw["Rysowanie Trajektorii"];
         USim -- wywołuje --> UVV;
         USim -- wywołuje --> UFV;
         USim -- wywołuje --> USD;
-        USim -- aktualizuje --> P1Edits; % Aktualizacja pól edycji po zmianach
+        USim -- aktualizuje --> P1Edits;
         USim -- aktualizuje --> P2Edits;
     end
 
@@ -405,43 +407,36 @@ graph TD
         CC -- odczytuje --> SD_P1P2;
         CC -- zwraca --> Siła;
         UVV -- odczytuje --> SD_P1P2_VelPos;
-        UVV -- aktualizuje --> GFX_V((Wektory Prędkości));
+        UVV -- aktualizuje --> GFX_V["Wektory Prędkości"];
         UFV -- wywołuje --> CC;
         UFV -- odczytuje --> SD_P1P2_VelPos;
-        UFV -- aktualizuje --> GFX_F((Wektory Siły));
-        UFV -- aktualizuje --> GFX_IntTxt((Tekst Interakcji));
+        UFV -- aktualizuje --> GFX_F["Wektory Siły"];
+        UFV -- aktualizuje --> GFX_IntTxt["Tekst Interakcji"];
         USD -- wywołuje --> CC;
         USD -- odczytuje --> SD_P1P2;
-        USD -- oblicza --> DanePochodne(Energie, Pędy);
-        USD -- aktualizuje --> InfoTxt{Pola Tekstowe w Panel Info};
+        USD -- oblicza --> DanePochodne["Energie, Pędy"];
+        USD -- aktualizuje --> InfoTxt["Pola Tekstowe w Panel Info"];
     end
 
     subgraph "Tworzenie i Konfiguracja Wykresu"
-        DodajWyk -- tworzy --> WP{Panel Wykresu};
-        DodajWyk -- tworzy --> WOP{Panel Opcji Wykresu};
-        DodajWyk -- tworzy --> WO((Oś Wykresu - wykres_osie));
-        DodajWyk -- zapisuje --> SD_PlotAxes(simData.wykres_osie);
-        WOP -- zawiera --> XPopup{Popup Oś X};
-        WOP -- zawiera --> YPopup{Popup Oś Y};
-        DodajWyk -- tworzy --> PlotOpts[(Dane: opcje_do_wyboru)];
-        DodajWyk -- zapisuje --> SD_PlotOpts(simData.plotNazwy / .plotZmienne);
+        DodajWyk -- tworzy --> WP["Panel Wykresu"];
+        DodajWyk -- tworzy --> WOP["Panel Opcji Wykresu"];
+        DodajWyk -- tworzy --> WO["Oś Wykresu - wykres_osie"];
+        DodajWyk -- zapisuje --> SD_PlotAxes["simData.wykres_osie"];
+        WOP -- zawiera --> XPopup["Popup Oś X"];
+        WOP -- zawiera --> YPopup["Popup Oś Y"];
+        DodajWyk -- tworzy --> PlotOpts["Dane: opcje_do_wyboru"];
+        DodajWyk -- zapisuje --> SD_PlotOpts["simData.plotNazwy / .plotZmienne"];
         DodajWyk -- odczytuje wartość --> XPopup;
         DodajWyk -- odczytuje wartość --> YPopup;
-        DodajWyk -- zapisuje --> SD_PlotSel(simData.wykresX / .wykresY - INDEKSY!);
-        DodajWyk -- wywołuje --> EdWyk[edycjaWykres];
+        DodajWyk -- zapisuje --> SD_PlotSel["simData.wykresX / .wykresY - INDEKSY!"];
+        DodajWyk -- wywołuje --> EdWyk["edycjaWykres"];
 
         EdWyk -- odczytuje --> SD_PlotSel;
-        %% EdWyk -- POTENCJALNIE: Konfiguruje etykiety WO, czyści historię SD_PlotHist -->
-
-        %% --- WAŻNE: Poniższa logika rysowania nie jest w pełni zaimplementowana w kodzie ---
-        %% USD -- POWINNO: Odczytywać SD_PlotSel / SD_PlotOpts -->
-        %% USD -- POWINNO: Wywoływać getCurrentPlotValue(id) -->
-        %% USD -- POWINNO: Modyfikować SD_PlotHist(simData.plotX/YHistory) -->
-        %% USD -- POWINNO: Wywoływać plot() na SD_PlotAxes -->
     end
 
     subgraph "Zamykanie"
-        CloseBtn{Przycisk Zamknij Okno} -- klik --> ExitP[exitProgram];
+        CloseBtn["Przycisk Zamknij Okno"] -- klik --> ExitP["exitProgram"];
         ExitP -- wywołuje --> StopSim;
         ExitP -- zamyka --> B;
     end
