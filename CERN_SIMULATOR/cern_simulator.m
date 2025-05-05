@@ -591,8 +591,8 @@ function cern_simulator
       %disp("dodawanie wykresów i robienie miejsca");
       positionsInfo = get(simulationPanel, 'Position');
       set(simulationPanel, 'Position', [positionsInfo(1), 0.32, positionsInfo(3), 0.70]);
-      wielkoscSymulacji = get(simulationPanel, 'DataAspectRatio'); %  otrymuje wszystko jako ( 1 1 1) ;
-      set(simulationPanel, 'DataAspectRatio', [2 3 1]);
+      wielkoscSymulacji = get(simulationAxes, 'DataAspectRatio'); %  otrymuje wszystko jako ( 1 1 1) ;
+      set(simulationAxes, 'DataAspectRatio', [2 3 1]);
 
       wykresPanel =  uipanel('Parent', fig, ...
                             'Units', 'normalized',...
