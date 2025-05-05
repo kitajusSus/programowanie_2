@@ -4,6 +4,11 @@
 
 **Indeks**: 89219,
 
+**Ważne linki**:
+*   [Link do opisu zderzeń pdf](http://newton.ftj.agh.edu.pl/~tobola/informatyka/wyklady/W5/Zderzenia.pdf) - Podstawa teoretyczna zderzeń.
+*   [Octave dokumentacja](https://docs.octave.org/latest/) - Zawsze pod ręką.
+- [skibidi projekt github inny](https://github.com/Cardiac-MR-Group-Lund/segment-open)
+
 **Opis projektu**:
 1.  stosując paradygmat programowania obiektowego w GNU/Octave:
 2. program prezentujący zderzanie się cząstek i ich zachowanie z skutek zderzania, (rozpad itd), 
@@ -69,7 +74,6 @@ Oczywiście jest to poprzedzone czymś w rodzaju kontruktora z cpp. Czyli Clasa 
 ```
 3. Tworzenie `Particles`: 
 [Cern simulator testowanie tworzenie obiektów](tests/adding_obj.m) W tym pliku tworzyłem obiekty na bazie inputu uzytkownika i sprawdzałem jak się zmieniają w czasie.
-- potem planuje by móc w gui za pomocą suwaków generować i zmieniać cechy obiektów. (cząstek.Particles)
 - Trzeba sprawdzać rozmiar tych cząstek by razem z położeniem środka śledzić promień i jeśli odleglość pomiędzy $r_1 + r_2 <= d$ uruchomić program do odbijania. czy coś takiego [Dodałem sprawdzanie tego](tests/adding_obj.m)
 - Zachowanie pędu, zderzenia, liczenie energii przy zderzeniu, 
 
@@ -110,12 +114,207 @@ $$p = 1 + 2x + 2x^2 + 5x^3$$
 
 
 **Projekt masz narysowany w zeszycie do optyki na koncu.**
+**A zdjęcia są na dole dokumentacji**
+[strzały ekranu](## strzały ekranu)
 
+
+
+
+1.  **Etap 1: Matematyka i Fizyka (Zrobione)**
+    *   **Zachowanie pędu i energii:** Wzory na zderzenia sprężyste są zaimplementowane w funkcji `updateSimulation` w sekcji kolizji cząstek. Suma energii kinetycznej jest śledzona w panelu informacyjnym (choć sama energia potencjalna nie jest liczona, więc suma kinetycznej nie musi być stała).
+    *   **Siła Coulomba:** Obliczana w funkcji `calcCoulomb`.
+    *   **Ruch:** (`v = v + a*dt`, `p = p + v*dt`) w `updateSimulation`.
+
+2.  **Etap 2: Podstawy Kodu (Zrobione)**
+    *   **Struktura danych:** jednak  wyrąbane w te klasy używamy, struktury `struct()`  o nazwie `simData` do trzymania wszystkiego (stan cząstek, flagi, uchwyty GUI). To upraszcza przekazywanie danych między funkcjami w srodku.
+```matlab
+simData = struct()
+% następnie by łatwiej funkcjonować octave robi dodatkowe elementy np. 
+simData.particle1 = createParticle( "wstaw tutaj dane potrzebne do funkcji ");
+simData.kochamMatiego = true;
+simData.nazwa = "skibidi";
+
+```
+Po tych wszytkich ustawieniach i zabiegach mamy coś takieg gdzie `simData` posiada następujące miejsca którym nadaje się wartośći
+```matlab
+simData ={
+    particle1,
+    kochamMatiego,
+    nazwa,
+}
+```
+Octave samodzielnie tworzy brakujące pola do dodawania wiec nie trzeba się przejmować by je stworzyć ale lepiej pilnować **nazw**.
+
+A dodatkowo prosze zobaczyć jak robię w pliku (Particle.m)[particle.m przy uzyciu classy]
+
+Dzięki tej formie zapisu danych (czyli uzycie struktury a nie klasy do zbudowania particle1 i 2) można łatwo je edyutować jako element `simData` i nie trzeba się martwić o to że coś się zepsuje.
+
+```matlab 
+% tak naprawde sim data wygląda w taki sposób w środku
+simData{
+    particle1{
+        mass: ,
+        charge: ,
+        position: [],
+        velocity: [],
+    },
+    kochamMatiego,
+    nazwa,
+}
+% wiec poprzez
+simData.particle1.mass = 2.6;
+%moge zmieniać konkretne lementy w particle1
+
+```
+
+*   **Funkcje pomocnicze:** `createParticle`, `calcCoulomb`, `update...`  isnieją i mają się dobrze, są odpowiedzialne za oblicznanie rzeczy. 
+
+3.  **Etap 3: Tworzenie GUI (Zrobione)**
+    -   **Główne okno (`figure`):** Ustawienie rozmiaru, tytułu, funkcji zamykania.
+    ```matlab
+    fig = figure('Name', 'CERN Simulator', 
+                'Position', [100, 100, 800, 600], 
+                'MenuBar', 'none', 
+                'NumberTitle', 'off', 
+                'CloseRequestFcn', @exitProgram);
+    % dla kogoś kto ogarnia octave nie powinno być problemu
+    ```
+    -   **Panele (`uipanel`):** Podział okna na logiczne sekcje (kontrola, symulacja, ustawienia cząstek, przyciski, info). Ułatwia organizację.
+   
+    *a) Jak zrobić panel???*
+    ```matlab
+        % Panel cząstki 1
+    p1Panel = uipanel('Parent', controlPanel, ...
+                     'Units', 'normalized', ...
+                     'Position', [0.05, 0.76, 0.9, 0.2], ...
+                     'Title', 'Cząstka 1 (czerwona)', ...
+                     'BackgroundColor', colors.panel);'
+
+        % nic szczególnego, by łatwiej segregować elementy gui ustawiam panel do którego będą łączyć się elementy tego panelu, 
+    %przez co jak przesunę ten panel to 
+    % przesuną się wszystkie elementy w nim zawarte 
+    % ale trzeba pamietać by wpisywać w tych children panels pozycje w kontekscie rodzica ponela
+    
+    ```
+    Gdziekolwiek nie zrobie panelu to jest tam wpisane `'Units' , 'normalized'` co oznacza ze wartośći parametrów tj. szerokość, wysokość itd.  są podawane jako "%" odległości w stounku do `parentPanel`
+
+    *   **Kontrolki (`uicontrol`):**
+        -   `'Style', 'text'`: Etykiety opisujące inne kontrolki lub wyświetlające dane.
+        -   `'Style', 'edit'`: Pola do wprowadzania wartości przez użytkownika (masa, ładunek, prędkość, pozycja). Mają ustawioną funkcję zwrotną (`'Callback', @updateParticles`), która odpala się po zmianie wartości.
+        -   `'Style', 'pushbutton'`: Przyciski (Start, Stop, Reset). Też mają swoje funkcje zwrotne (`@startSimulation`, `@stopSimulation`, `@resetSimulation`).
+    *   **Obszar rysowania (`axes`):** Miejsce w panelu symulacji, gdzie rysujemy cząstki, trajektorie i wektory. Ma ustawione granice (`XLim`, `YLim`) i proporcje (`DataAspectRatio`).
+    *   **Grafika (`plot`, `quiver`, `text`):**
+        *   `plot(..., 'o')`: Rysuje markery cząstek. Uchwyty (`p1Handle`, `p2Handle`) pozwalają zmieniać ich pozycję (`XData`, `YData`) i rozmiar (`MarkerSize`).
+        *   `plot(..., '-')`: Rysuje linie trajektorii. Uchwyty (`p1TrajectoryHandle`, ...) pozwalają aktualizować dane (`XData`, `YData`) na podstawie historii pozycji.
+        *   `quiver(...)`: Rysuje strzałki (wektory) prędkości i sił. Uchwyty pozwalają zmieniać ich początek (`XData`, `YData`) i składowe (`UData`, `VData`).
+        *   `text(...)`: Wyświetla tekst (np. typ interakcji) na obszarze rysowania.
+
+4.  **Etap 4: Połączenie Logiki z GUI (Zrobione)**
+    -   **Pętla symulacji (`timerLoop`, `updateSimulation`):** Serce programu. Działa w tle (dzięki `pause` i `drawnow`), liczy fizykę i regularnie aktualizuje stan w `simData`.
+    -   **Aktualizacja GUI:** Funkcje `update...` (np. `updateVelocityVectors`, `updateSimulationData`) oraz bezpośrednie komendy `set(...)` w `updateSimulation` zmieniają wygląd kontrolek i grafiki na podstawie danych w `simData`.
+    -   **Interakcja użytkownika:** Callbacki przycisków (`startSimulation`, ...) i pól edycji (`updateParticles`) modyfikują `simData` (np. zmieniają `simData.isRunning` lub wartości parametrów cząstek) i odpalają odpowiednie akcje.
+
+---
+
+## Jak Tworzyć Elementy GUI
+Tworzenie interfejsu w Octave opiera się głównie na kilku funkcjach:
+
+1.  **`figure` - Główne Okno**
+    *   Wywołanie `fig = figure(...)` tworzy nowe okno. Było na zajeciach jest w każdym programie 
+    *   Ważne właściwości (podawane jako pary 'Nazwa', Wartość):
+        *   `'Name'`: Tytuł okna.
+        *   `'Position'`: `[lewy_dolny_x, lewy_dolny_y, szerokość, wysokość]` w pikselach.
+        *   `'Units'`: W jakich jednostkach podajemy `Position` (np. `'pixels'`, `'normalized'`). `'normalized'` jest super do skalowania.
+        *   `'MenuBar'`, `'NumberTitle'`: Kontrola wyglądu okna.
+        *   `'CloseRequestFcn'`: `@nazwa_funkcji` - co ma się stać po kliknięciu 'X'. u mnie logiczne ma sie skonczyć program czyli ->`@exitProgram`.
+
+2.  **`uipanel` - Kontener/Sekcja**
+    *   Służy do grupowania innych elementów. `panel = uipanel('Parent', rodzic, ...)`
+    *   `'Parent'`: Do jakiego okna (`figure`) lub innego panelu należy ten panel.
+    *   `'Title'`: Napis na ramce panelu.
+    *   `'Position'`: Położenie i rozmiar *wewnątrz rodzica*.
+
+```matlab
+   'Position', [0.05, 0.4, 0.9, 0.15]
+```
+
+>   **`0.05`**: Lewy dolny róg panelu znajduje się 5% szerokości panelu od lewej krawędzi.
+    **`0.4`**: Lewy dolny róg panelu znajduje się 40% wysokości  panelu od dolnej krawędzi.
+    **`0.9`**: Panel zajmuje 90% szerokości panelu.
+    **`0.15`**: Panel zajmuje 15% wysokości panelu.
+
+    *   `'BackgroundColor'`: Kolor tła.
+
+3.  **`axes` - Obszar Wykresu**
+    *   Miejsce do rysowania. `ax = axes('Parent', rodzic, ...)`
+    *   `'Parent'`: Zazwyczaj panel przeznaczony na symulację.
+    *   `'Position'`: Położenie i rozmiar wewnątrz rodzica.
+    *   `'XLim'`, `'YLim'`: Zakresy osi.
+    *   `'DataAspectRatio', [1 1 1]`: Żeby koła były kołami, a nie elipsami.
+    *   `'Box'`, `'Grid'`: Włączenie ramki i siatki.
+
+4.  **`uicontrol` - Przyciski, Pola Tekstowe, Edycja itp.**
+    *   Najbardziej wszechstronne narzędzie. `uchwyt = uicontrol('Parent', rodzic, 'Style', styl, ...)`
+    *   `'Parent'`: Panel lub okno, w którym ma się pojawić.
+    *   `'Style'`: Kluczowa właściwość, decyduje o typie kontrolki:
+        *   `'text'`: Zwykła etykieta tekstowa. Używamy do opisów lub wyświetlania danych (np. `forceText`). Właściwość `'String'` przechowuje tekst. `'HorizontalAlignment'` kontroluje wyrównanie.
+        *   `'edit'`: Pole do wpisywania tekstu/liczb przez użytkownika. `'String'` zawiera wpisaną wartość. `'Callback'` definiuje funkcję do wywołania po edycji.
+        *   `'pushbutton'`: Przycisk. `'String'` to napis na przycisku. `'Callback'` definiuje funkcję do wywołania po kliknięciu.
+        *   Inne style: `'slider'`, `'checkbox'`, `'radiobutton'`, `'popupmenu'`...
+    *   `'Position'`: Położenie i rozmiar wewnątrz rodzica.
+    *   `'String'`: Tekst na etykiecie/przycisku lub wartość w polu edycji.
+    *   `'Callback'`: `@nazwa_funkcji` - najważniejsze dla interaktywności! Łączy akcję użytkownika (klik, edycja) z kodem Octave.
+
+5.  **Uchwyty (Handles)**
+    *   Kiedy tworzysz element GUI (np. `przycisk = uicontrol(...)`), zmienna `przycisk` przechowuje "uchwyt" do tego elementu.
+    *   Uchwyty są niezbędne, żeby później móc modyfikować właściwości elementów za pomocą funkcji `set()`. Np.:
+        *   `set(p1Handle, 'XData', nowa_pozycja_x)` - przesuwa marker cząstki.
+        *   `set(forceText, 'String', obliczona_sila)` - aktualizuje wyświetlaną siłę.
+        *   `get(p1MassEdit, 'String')` - odczytuje wartość wpisaną przez użytkownika.
+    *   Warto przechowywać ważne uchwyty w strukturze `simData`, żeby były łatwo dostępne z różnych funkcji.
+
+6.  **`drawnow()` i `pause()` w Pętli**
+    *   W pętli symulacji (`timerLoop`) `drawnow()` wymusza odświeżenie okna GUI, żeby zmiany były widoczne.
+    *   `pause(dt)` wprowadza opóźnienie, kontrolując szybkość symulacji i dając GUI czas na reakcję.
+
+
+---
+
+## strzały ekranu
 
 ![Wyglada to mniej wiecej tak](image.png)
-
 
 
 ![LUB TAK](image-1.png)
 
 
+<<<<<<< HEAD
+=======
+# wykresy.m 
+[wykresy plik](wykresy.m)
+Plik ten ma za zadanie być wywoływany przez  przycisk wykresy w [main](cern_simulator.m) i ma otwierać okno edycji wykresów
+
+planuje by to zrobić tak 
+
+1. przycisk otwiera okno do wyboru tego co jest na której osi. 
+2. następnie dodaje się wykres na spodzie pod symulacją i aktualizuje się na bierząco co `dt`
+- wiec musze  zrobić to w update plot funkcji ponieważ musi się aktualizować razem z wszystkium
+- moge skorzystać z funkcji `isfield` do sprawdzania czy  wykres istnieje w `simData` [link do projektu github](https://github.com/ndtatbristol/brain1/blob/439d359200c942bfa330a3b6ebd0b7e6bfe5b788/gui_1d_plot_panel.m) 
+- albo inaczej lekko, funkcja do sprawdzania bedzie istnieć, ale narazie skupie się by po wciśnięciu przycisku  `wykres`  zmienić rozmiar tego okna na rzeczy i zrobić mijesce na wyrkes
+3. problem jak to zrobić by funkcja i zewnętrzny kod wiedział jak aktuliazować dane na wykresie w real time
+
+
+### Wykresy - dodanie miejsca
+Dobra dodałem funkcję `dodaj_wykresy`   robi ona miejsce na plot wykresów
+zmiena ona parametry simulationPanel by przesunąć go do góry
+
+**panel wykresOpcjePanel**
+W tym panelu są dwa popup okienka gdzie mozna wybrać co jest na osi x a co jest na osi y
+
+### Wykresy - edytowanie wykresu
+Teraz skupię się na funkcji `edycjaWykres` która bedzie odpowiadać za zmiane i plotowanie wykresu w `simData.wykres_osie`
+
+
+
+JUTRO OMAWIANIE TEGO WSZYSTKIEGO KONIEC NA 05.05.2025
+>>>>>>> 15363e1c37619199fe25d30bb7aed45dacf35f29
