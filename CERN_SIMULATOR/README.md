@@ -7,6 +7,7 @@
 **Ważne linki**:
 *   [Link do opisu zderzeń pdf](http://newton.ftj.agh.edu.pl/~tobola/informatyka/wyklady/W5/Zderzenia.pdf) - Podstawa teoretyczna zderzeń.
 *   [Octave dokumentacja](https://docs.octave.org/latest/) - Zawsze pod ręką.
+- [skibidi projekt github inny](https://github.com/Cardiac-MR-Group-Lund/segment-open)
 
 **Opis projektu**:
 1.  stosując paradygmat programowania obiektowego w GNU/Octave:
