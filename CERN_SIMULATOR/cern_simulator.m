@@ -5,7 +5,7 @@ function cern_simulator
 
     % Tworzenie i konfiguracja głównego okna
     fig = figure('Name', 'Symulacja na programowanie', 'NumberTitle', 'off', ...
-                'Position', [100, 100, 1000, 600], 'MenuBar', 'none', ...
+                'Position', [100, 100, 1300, 800], 'MenuBar', 'none', ...
                 'Resize', 'on', 'CloseRequestFcn', @exitProgram);
 
     % Definicja kolorów interfejsu
@@ -18,7 +18,7 @@ function cern_simulator
     % Ustawienie tła głównego okna
     set(fig, 'Color', colors.background);
 
-    % układ głównych paneli 
+    % układ głównych paneli
 
     % Panel kontrolny (po lewej)
     controlPanel = uipanel('Parent', fig, ...
@@ -31,6 +31,7 @@ function cern_simulator
     simulationPanel = uipanel('Parent', fig, ...
                             'Units', 'normalized', ...
                             'Position', [0.30, 0.01, 0.69, 0.98], ...
+                            'DataAspectRatio', [1 1 1], ...
                             'Title', 'panel simulations ', ...
                             'BackgroundColor', colors.panel);
 
@@ -117,7 +118,7 @@ function cern_simulator
              'Units', 'normalized', ...
              'Position', [0.05, 0.35, 0.3, 0.15], ...
              'String', 'Prędkość Y:');
-    p1VelocityYEdit = uicontrol('Parent', p1Panel, 
+    p1VelocityYEdit = uicontrol('Parent', p1Panel,
                                'Style', 'edit', ...
                                'Units', 'normalized', ...
                                'Position', [0.4, 0.35, 0.5, 0.15], ...
@@ -143,7 +144,7 @@ function cern_simulator
              'Units', 'normalized', ...
              'Position', [0.05, 0.05, 0.3, 0.15], ...
              'String', 'Pozycja Y:');
-    p1PositionYEdit = uicontrol('Parent', p1Panel, 
+    p1PositionYEdit = uicontrol('Parent', p1Panel,
                                'Style', 'edit', ...
                                'Units', 'normalized', ...
                                'Position', [0.4, 0.05, 0.5, 0.15], ...
@@ -153,7 +154,7 @@ function cern_simulator
 
     % MODYFI KOWANIE PARTICLE2
     % Etykiety i pola cząstki 2
-      
+
     % Masa
     uicontrol('Parent', p2Panel, 'Style', 'text', ...
              'Units', 'normalized', ...
@@ -366,7 +367,8 @@ function cern_simulator
     simData.p1History = zeros(simData.historyLength, 2);
     simData.p2History = zeros(simData.historyLength, 2);
 %  puste elementy struktury simData do robienia wykresów
-    simData.wykres_osie = [];       % Uchwyt do osi wykresu (jeśli istnieje)
+    simData.wykres_osieLewy = [];       % Uchwyt do osi wykresu (jeśli istnieje)
+    simData.wykres_osiePrawy = [];
     simData.plotXVarID = '';        % oś X
     simData.plotYVarID = '';        % zmiennej Y
     simData.plotXHistory = [];      % Historia X
@@ -407,8 +409,8 @@ function cern_simulator
     updateParticles();
 
     % ===== FUNKCJE POMOCNICZE =====
-     
-        
+
+
     % Funkcja do resetowania symulacji
     function resetSimulation(~, ~)
         stopSimulation();
@@ -455,9 +457,10 @@ function cern_simulator
 
         % Wektor siły: dodatni - przyciąganie, ujemny - odpychanie
         F_vec = -F_mag * r_unit;
-        
+
     end
-% dzięki Bogu istnieje copilot który zrobi za mnie mozolne pisanie, troche było do zmiany  te str2double ale generalnie polecam
+% dzięki Bogu istnieje copilot który zrobi za mnie mozolne pisanie, troche było do zmiany
+%te str2double ale generalnie polecam
     % Funkcja do aktualizacji parametrów cząstek z pól edycji
     function updateParticles(~, ~)
         % Odczytanie wartości z pól edycji
@@ -478,7 +481,7 @@ function cern_simulator
             simData.particle2.position(2) = str2double(get(p2PositionYEdit, 'String'));
 
             % Aktualizacja rozmiaru cząstek
-            set(simData.p1Handle, 'MarkerSize', 10*simData.particle1.mass);
+            set(simData.p1Handle, 'MarkerSize', 100);
             set(simData.p2Handle, 'MarkerSize', 10*simData.particle2.mass);
 
             % Aktualizacja pozycji cząstek
@@ -514,7 +517,8 @@ function cern_simulator
     % Funkcja do aktualizacji wektorów prędkości
     function updateVelocityVectors()
         scale = 1; % Skala wizualizacji prędkości jak duzy jest wektor.
-        % używany w testach jak potrzebuje wiedzieć czy kierunek jest dobry lub czy rośnie a w wypadku gdy predkosc sie robi bliska światłu to potrzebuje znać kierunek i to czy rośnie lub  się różnią od siebie. temu mozna ustawić skale
+        % używany w testach jak potrzebuje wiedzieć czy kierunek jest dobry lub czy rośnie a w wypadku
+        %gdy predkosc sie robi bliska światłu to potrzebuje znać kierunek i to czy rośnie lub  się różnią od siebie. temu mozna ustawić skale
         set(simData.p1VelocityHandle, 'XData', simData.particle1.position(1), ...
                                      'YData', simData.particle1.position(2), ...
                                      'UData', scale * simData.particle1.velocity(1), ...
@@ -577,16 +581,19 @@ function cern_simulator
         set(energySuma, 'String', sprintf('%.3e J', totalEnergy));
         set(momentum1Text, 'String', sprintf('[%.3f, %.3f]', p1(1), p1(2)));
         set(momentum2Text, 'String', sprintf('[%.3f, %.3f]', p2(1), p2(2)));
-        
+
         if isfield(simData, 'wykresy_osie')
-          disp("wykresy pełne");  
+          disp("wykresy pełne");
         end
     end
 
     function dodaj_wykresy(~,~)
       %disp("dodawanie wykresów i robienie miejsca");
       positionsInfo = get(simulationPanel, 'Position');
-      set(simulationPanel, 'Position', [positionsInfo(1), 0.30, positionsInfo(3), 0.70]);
+      set(simulationPanel, 'Position', [positionsInfo(1), 0.32, positionsInfo(3), 0.70]);
+      wielkoscSymulacji = get(simulationPanel, 'DataAspectRatio'); %  otrymuje wszystko jako ( 1 1 1) ;
+      set(simulationPanel, 'DataAspectRatio', [2 3 1]);
+
       wykresPanel =  uipanel('Parent', fig, ...
                             'Units', 'normalized',...
                             'Position', [0.30, 0.01, 0.69, 0.30], ...
@@ -594,15 +601,24 @@ function cern_simulator
                             'BackgroundColor', colors.panel);
       wykresOpcjePanel = uipanel('Parent', wykresPanel, ...
                                 'Units', 'normalized', ...
-                                'Position', [0.01, 0.05, 0.20,0.95]
+                                'Position', [0.01, 0.01, 0.15,0.95]
                                 );
-      wykres_osie = axes('Parent', wykresPanel, ...
+      wykres_osie_lewy = axes('Parent', wykresPanel, ...
                         'Units', 'normalized', ...
-                        'Position', [0.30, 0.01, 0.90, 0.95]);
-      simData.wykres_osie = wykres_osie;
+                        'Position', [0.20, 0.11, 0.30, 0.80],...
+                        'DataAspectRatio', [2 3 1], ...
+                        'Box', 'on', 'XGrid', 'on', 'YGrid', 'on');
+      simData.wykres_osieL = wykres_osie_lewy;
+
+      wykres_osie_prawy = axes('Parent', wykresPanel, ...
+                        'Units', 'normalized', ...
+                        'Position', [0.40, 0.11, 0.95, 0.80],...
+                        'DataAspectRatio', [2 3 1], ...
+                        'Box', 'on', 'XGrid', 'on', 'YGrid', 'on');
+      simData.wykres_osieP = wykres_osie_prawy;
 
       % dodawanie przycisków do definiowania co jest na której osi.
-      
+
       opcje_do_wyboru = {
         'Czas',             'time';
         'Energia Całk.',    'totalEnergy';
@@ -612,38 +628,47 @@ function cern_simulator
         'Pręd. 1',    'predkosc1';
         'Pręd. 2',    'predkosc2';
         'Odległość',        'distance'
-    };
-    plotNazwy = opcje_do_wyboru(:, 1); % Nazwy dla użytkownika
-    plotZmienne = opcje_do_wyboru(:, 2);   % nazwy zmiennych
-    simData.plotNazwy = plotNazwy;
-    simData.plotZmienne = plotZmienne;
-    % Etykieta i lista rozwijana dla osi X
-    uicontrol('Parent', wykresOpcjePanel, 'Style', 'text', ...
-              'Units', 'normalized', 'Position', [0.05, 0.6, 0.2, 0.25], ...
-              'String', 'Oś X:', 'HorizontalAlignment', 'left');
-    xWykresPopup = uicontrol('Parent', wykresOpcjePanel, 'Style', 'popupmenu', ...
-                         'Units', 'normalized', 'Position', [0.3, 0.6, 0.65, 0.25], ...
+      };
+      plotNazwy = opcje_do_wyboru(:, 1); % Nazwy dla użytkownika
+      plotZmienne = opcje_do_wyboru(:, 2);   % nazwy zmiennych
+      simData.plotNazwy = plotNazwy;
+      simData.plotZmienne = plotZmienne;
+      %LEWY WYKRES
+      uicontrol('Parent', wykresOpcjePanel, 'Style', 'text', ...
+              'Units', 'normalized', 'Position', [0.05, 0.85, 0.95, 0.15], ...
+              'String', 'LEWY', 'HorizontalAlignment', 'left');
+      jedenWykresPopup = uicontrol('Parent', wykresOpcjePanel, 'Style', 'popupmenu', ...
+                         'Units', 'normalized', 'Position', [0.05, 0.60, 0.95, 0.15], ...
                          'String', plotNazwy,
-                         'Value', 1, ... % 
+                         'Value', 1, ... %
+                         'Callback', @edycjaWykres, ...
                          'BackgroundColor', 'white');
-    % Etykieta i lista rozwijana dla osi X
-    uicontrol('Parent', wykresOpcjePanel, 'Style', 'text', ...
-              'Units', 'normalized', 'Position', [0.05, 0.30, 0.2, 0.25], ...
-              'String', 'oś y:', 'HorizontalAlignment', 'left');
-    yWykresPopup = uicontrol('Parent', wykresOpcjePanel, 'Style', 'popupmenu', ...
-                         'Units', 'normalized', 'Position', [0.3, 0.3, 0.65, 0.25], ...
+      % PRAWY WYKRES
+      uicontrol('Parent', wykresOpcjePanel, 'Style', 'text', ...
+              'Units', 'normalized', 'Position', [0.05, 0.27, 0.95, 0.15], ...
+              'String', 'Prawy wykres: ', 'HorizontalAlignment', 'left');
+      dwaWykresPopup = uicontrol('Parent', wykresOpcjePanel, 'Style', 'popupmenu', ...
+                         'Units', 'normalized', 'Position', [0.05, 0.07, 0.95, 0.20], ...
                          'String', plotNazwy,
                          'Value', 1, ... % Domyślnie 'Czas'
-                         'BackgroundColor', 'white'); 
-    simData.wykresX = get(xWykresPopup, 'Value');
-    simData.wykresY = get(yWykresPopup, 'Value');
-      edycjaWykres();
+                         'Callback', @edycjaWykres, ...
+                         'BackgroundColor', 'white');
+      simData.wykres_jeden = jedenWykresPopup;
+      title(simData.wykres_osieL, 'Lewy wykres');
+      xlabel(simData.wykres_osieL, 'czas');
+      % dla prawego wykresu
+      simData.wykres_dwa = dwaWykresPopup;
+      title(simData.wykres_osieP, 'Prawy wykres');
+      xlabel(simData.wykres_osieP, 'czas');
     end
-   %% funkcja do edyutowania wykresu i sprawdzania co nowego, dodawanie i zmienianie wykresu + edycja osi () 
+   %% funkcja do edyutowania wykresu i sprawdzania co nowego, dodawanie i zmienianie wykresu + edycja osi ()
     function edycjaWykres(~,~)
-      x = simData.wykresX;
-      y = simData.wykresY;
-    end 
+      % dodaje tylko y1 y2 dla każdej z funkcji bo obie są zależne od czasu
+      % edycja wykres Lewy wykres1
+      ylabel(simData.wykres_osieL, simData.plotNazwy(get(simData.wykres_jeden, 'Value')));
+      %edycja wykres prawy 2
+      ylabel(simData.wykres_osieP, simData.plotNazwy(get(simData.wykres_dwa, 'Value')));
+    end
 
     % Funkcja do uruchamiania symulacji
     function startSimulation(~, ~)
@@ -701,8 +726,8 @@ function cern_simulator
         simData.particle2.position(1:2) = simData.particle2.position(1:2) + simData.particle2.velocity(1:2) * simData.dt;
 
         % Sprawdzanie odbicia od ścian (idealne sprężyste odbicie)
-        xlim = get(simulationAxes, 'XLim');
-        ylim = get(simulationAxes, 'YLim');
+        xlim = get(simulationAxes, 'XLim'); %granica osi x
+        ylim = get(simulationAxes, 'YLim'); %granica osi y
 
         % Odbicie cząstki 1 od ścian
         if simData.particle1.position(1) - simData.particle1.mass < xlim(1)
@@ -812,6 +837,3 @@ function cern_simulator
         delete(gcf);
     end
 end
-
-
-
