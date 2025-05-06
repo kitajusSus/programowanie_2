@@ -2,12 +2,13 @@ function cern_simulator
     % Programowanie skibdi - poprzednia nazwa to cern simulator bo zderzenia cząstek ale działa jako skibdi simulatok
     % Autor: kb89219
     % Data: 2025-04-07
-
+    disp('program start');
+    graphics_toolbox = 'qt';
     % Tworzenie i konfiguracja głównego okna
     fig = figure('Name', 'Symulacja na programowanie', 'NumberTitle', 'off', ...
                 'Position', [100, 100, 1300, 800], 'MenuBar', 'none', ...
                 'Resize', 'on', 'CloseRequestFcn', @exitProgram);
-
+    disp('Figure created');
     % Definicja kolorów interfejsu
     colors.background = [0.95, 0.95, 0.95];
     colors.panel = [0.9, 0.9, 0.9];
@@ -26,14 +27,14 @@ function cern_simulator
                          'Position', [0.01, 0.01, 0.28, 0.98], ...
                          'Title', 'Panel kontrolny', ...
                          'BackgroundColor', colors.panel);
-
+    disp('controlPanel created');
     % Panel symulacji (po prawej)
     simulationPanel = uipanel('Parent', fig, ...
                             'Units', 'normalized', ...
                             'Position', [0.30, 0.01, 0.69, 0.98], ...
                             'Title', 'panel simulations ', ...
                             'BackgroundColor', colors.panel);
-
+    disp('simulationPanel created');
     % wykres symulacji
     simulationAxes = axes('Parent', simulationPanel, ...
                          'Units', 'normalized', ...
@@ -45,7 +46,7 @@ function cern_simulator
     title(simulationAxes, 'Symulacja ruchu cząstek na zajecia programowanie title');
     xlabel(simulationAxes, 'X');
     ylabel(simulationAxes, 'Y');
-
+    disp('simulationAxes created');
     % Konfiguracja elementów panelu kontrolnego (dzielimy na sekcje)
     % Panel cząstki 1
     p1Panel = uipanel('Parent', controlPanel, ...
@@ -53,14 +54,14 @@ function cern_simulator
                      'Position', [0.05, 0.76, 0.9, 0.2], ...
                      'Title', 'Cząstka 1 (czerwona)', ...
                      'BackgroundColor', colors.panel);
-
+    disp('p1Panel created');
     % Panel cząstki 2
     p2Panel = uipanel('Parent', controlPanel, ...
                      'Units', 'normalized', ...
                      'Position', [0.05, 0.54, 0.9, 0.2], ...
                      'Title', 'Cząstka 2 (niebieska)', ...
                      'BackgroundColor', colors.panel);
-
+    disp('p2Panel created');
     % Panel przycisków sterujących
     controlButtonsPanel = uipanel('Parent', controlPanel, ...
                                 'Units', 'normalized', ...
@@ -481,7 +482,7 @@ function cern_simulator
             simData.particle2.position(2) = str2double(get(p2PositionYEdit, 'String'));
 
             % Aktualizacja rozmiaru cząstek
-            set(simData.p1Handle, 'MarkerSize', 100);
+            set(simData.p1Handle, 'MarkerSize', 10*simData.particle1.mass);
             set(simData.p2Handle, 'MarkerSize', 10*simData.particle2.mass);
 
             % Aktualizacja pozycji cząstek
