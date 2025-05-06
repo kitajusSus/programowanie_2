@@ -500,7 +500,7 @@ function cern_simulator
 
             % Aktualizacja wektorów
             updateVelocityVectors();
-            updateForceVectors();
+
 
             % Aktualizacja danych symulacji
             updateSimulationData();
