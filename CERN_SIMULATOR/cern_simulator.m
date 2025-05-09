@@ -3,7 +3,7 @@ function cern_simulator
     % Autor: kb89219
     % Data: 2025-04-07
     disp('program start');
-    graphics_toolbox = 'qt';
+    %graphics_toolbox = 'qt';
     % Tworzenie i konfiguracja głównego okna
     fig = figure('Name', 'Symulacja na programowanie', 'NumberTitle', 'off', ...
                 'Position', [100, 100, 1300, 800], 'MenuBar', 'none', ...
