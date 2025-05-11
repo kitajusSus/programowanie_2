@@ -288,8 +288,6 @@ Tworzenie interfejsu w Octave opiera się głównie na kilku funkcjach:
 ![LUB TAK](image-1.png)
 
 
-<<<<<<< HEAD
-=======
 # wykresy.m 
 [wykresy plik](wykresy.m)
 Plik ten ma za zadanie być wywoływany przez  przycisk wykresy w [main](cern_simulator.m) i ma otwierać okno edycji wykresów
@@ -317,4 +315,6 @@ Teraz skupię się na funkcji `edycjaWykres` która bedzie odpowiadać za zmiane
 
 
 JUTRO OMAWIANIE TEGO WSZYSTKIEGO KONIEC NA 05.05.2025
->>>>>>> 15363e1c37619199fe25d30bb7aed45dacf35f29
+
+
+
