@@ -753,12 +753,12 @@ function cern_simulator
       end
 
   % Aktualizuj historię wykresu tylko jeśli symulacja jest uruchomiona
-  % lub gdy tablica historii ma tylko jeden element (inicjalizacja)
-  if simData.isRunning || length(simData.czasHistory) <= 1
-    simData.czasHistory(end+1) = simData.time;
-    simData.plotLewyHistory(end+1) = lewyValue;
-    simData.plotPrawyHistory(end+1) = prawyValue;
-  end
+    %  lub gdy tablica historii ma tylko jeden element (inicjalizacja)
+      if simData.isRunning || length(simData.czasHistory) <= 1
+        simData.czasHistory(end+1) = simData.time;
+        simData.plotLewyHistory(end+1) = lewyValue;
+        simData.plotPrawyHistory(end+1) = prawyValue;
+      end
 
       % Ogranicz rozmiar tablic historii (dla wydajności)
       if length(simData.czasHistory) > simData.maxPlotHistory
@@ -786,9 +786,9 @@ function cern_simulator
       xlabel('Czas [s]');
       ylabel(simData.plotNazwy{prawyWykresID});
 
-  % Przywróć aktywną oś symulacji, aby nie zakłócać głównego rysunku
-  axes(simulationAxes);
-end
+      % Przywróć aktywną oś symulacji, aby nie zakłócać głównego rysunku
+      axes(simulationAxes);
+    end
 
     % Funkcja do uruchamiania symulacji
     function startSimulation(~, ~)
