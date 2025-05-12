@@ -2,13 +2,13 @@ function cern_simulator
     % Programowanie skibdi - poprzednia nazwa to cern simulator bo zderzenia cząstek ale działa jako skibdi simulatok
     % Autor: kb89219
     % Data: 2025-04-07
-    disp('program start');
+    %disp('program start');
     %graphics_toolbox = 'qt';
     % Tworzenie i konfiguracja głównego okna
     fig = figure('Name', 'Symulacja na programowanie', 'NumberTitle', 'off', ...
                 'Position', [100, 100, 1300, 800], 'MenuBar', 'none', ...
                 'Resize', 'on', 'CloseRequestFcn', @exitProgram);
-    disp('Figure created');
+    %disp('Figure created');
     % Definicja kolorów interfejsu
     colors.background = [0.95, 0.95, 0.95];
     colors.panel = [0.9, 0.9, 0.9];
@@ -27,14 +27,14 @@ function cern_simulator
                          'Position', [0.01, 0.01, 0.28, 0.98], ...
                          'Title', 'Panel kontrolny', ...
                          'BackgroundColor', colors.panel);
-    disp('controlPanel created');
+    %disp('controlPanel created');
     % Panel symulacji (po prawej)
     simulationPanel = uipanel('Parent', fig, ...
                             'Units', 'normalized', ...
                             'Position', [0.30, 0.01, 0.69, 0.98], ...
                             'Title', 'panel simulations ', ...
                             'BackgroundColor', colors.panel);
-    disp('simulationPanel created');
+    %disp('simulationPanel created');
     % wykres symulacji
     simulationAxes = axes('Parent', simulationPanel, ...
                          'Units', 'normalized', ...
@@ -46,7 +46,7 @@ function cern_simulator
     title(simulationAxes, 'Symulacja ruchu cząstek na zajecia programowanie title');
     xlabel(simulationAxes, 'X');
     ylabel(simulationAxes, 'Y');
-    disp('simulationAxes created');
+    %disp('simulationAxes created');
     % Konfiguracja elementów panelu kontrolnego (dzielimy na sekcje)
     % Panel cząstki 1
     p1Panel = uipanel('Parent', controlPanel, ...
@@ -54,14 +54,14 @@ function cern_simulator
                      'Position', [0.05, 0.76, 0.9, 0.2], ...
                      'Title', 'Cząstka 1 (czerwona)', ...
                      'BackgroundColor', colors.panel);
-    disp('p1Panel created');
+    %disp('p1Panel created');
     % Panel cząstki 2
     p2Panel = uipanel('Parent', controlPanel, ...
                      'Units', 'normalized', ...
                      'Position', [0.05, 0.54, 0.9, 0.2], ...
                      'Title', 'Cząstka 2 (niebieska)', ...
                      'BackgroundColor', colors.panel);
-    disp('p2Panel created');
+    %disp('p2Panel created');
     % Panel przycisków sterujących
     controlButtonsPanel = uipanel('Parent', controlPanel, ...
                                 'Units', 'normalized', ...
@@ -372,8 +372,8 @@ function cern_simulator
     simData.wykres_osiePrawy = [];
     simData.plotXVarID = '';        % oś X
     simData.plotYVarID = '';        % zmiennej Y
-    simData.plotXHistory = [];      % Historia X
-    simData.plotYHistory = [];      % Historia Y
+    simData.plotLewyHistory = [];      % Historia Lewego wykresu
+    simData.plotPrawyHistory = [];      % Prawy wykres
     simData.maxPlotHistory = 500;   % Maksymalna długość historii wykresu
     % Inicjalizacja grafiki cząstek
     hold(simulationAxes, 'on');
@@ -498,14 +498,10 @@ function cern_simulator
             % Aktualizacja trajektorii
             set(simData.p1TrajectoryHandle, 'XData', NaN, 'YData', NaN);
             set(simData.p2TrajectoryHandle, 'XData', NaN, 'YData', NaN);
-
             % Aktualizacja wektorów
             updateVelocityVectors();
-
-
             % Aktualizacja danych symulacji
             updateSimulationData();
-
             % Reset czasu symulacji
             simData.time = 0;
             set(timeText, 'String', sprintf('%.2f s', simData.time));
@@ -577,9 +573,13 @@ function cern_simulator
         totalEnergy = E1+E2;
         % Aktualizacja pól tekstowych
         set(forceText, 'String', sprintf('%.3e N', F_mag));
+        simData.F_mag = F_mag;
         set(energy1Text, 'String', sprintf('%.3e J', E1));
+        simData.E1 = E1;
         set(energy2Text, 'String', sprintf('%.3e J', E2));
+        simData.E2 = E2;
         set(energySuma, 'String', sprintf('%.3e J', totalEnergy));
+        simData.totalEnergy = totalEnergy;
         set(momentum1Text, 'String', sprintf('[%.3f, %.3f]', p1(1), p1(2)));
         set(momentum2Text, 'String', sprintf('[%.3f, %.3f]', p2(1), p2(2)));
 
@@ -609,14 +609,14 @@ function cern_simulator
                         'Position', [0.20, 0.11, 0.30, 0.80],...
                         'DataAspectRatio', [2 3 1], ...
                         'Box', 'on', 'XGrid', 'on', 'YGrid', 'on');
-      simData.wykres_osieL = wykres_osie_lewy;
+      simData.wykres_osieL_handle = wykres_osie_lewy;
 
       wykres_osie_prawy = axes('Parent', wykresPanel, ...
                         'Units', 'normalized', ...
                         'Position', [0.40, 0.11, 0.95, 0.80],...
                         'DataAspectRatio', [2 3 1], ...
                         'Box', 'on', 'XGrid', 'on', 'YGrid', 'on');
-      simData.wykres_osieP = wykres_osie_prawy;
+      simData.wykres_osieP_handle = wykres_osie_prawy;
 
       % dodawanie przycisków do definiowania co jest na której osi.
 
@@ -637,7 +637,7 @@ function cern_simulator
       %LEWY WYKRES
       uicontrol('Parent', wykresOpcjePanel, 'Style', 'text', ...
               'Units', 'normalized', 'Position', [0.05, 0.85, 0.95, 0.15], ...
-              'String', 'LEWY', 'HorizontalAlignment', 'left');
+              'String', 'Lewy wykres', 'HorizontalAlignment', 'left');
       jedenWykresPopup = uicontrol('Parent', wykresOpcjePanel, 'Style', 'popupmenu', ...
                          'Units', 'normalized', 'Position', [0.05, 0.60, 0.95, 0.15], ...
                          'String', plotNazwy,
@@ -655,20 +655,22 @@ function cern_simulator
                          'Callback', @edycjaWykres, ...
                          'BackgroundColor', 'white');
       simData.wykres_jeden = jedenWykresPopup;
-      title(simData.wykres_osieL, 'Lewy wykres');
-      xlabel(simData.wykres_osieL, 'czas');
+      title(simData.wykres_osieL_handle, 'Lewy wykres');
+      xlabel(simData.wykres_osieL_handle, 'czas');
       % dla prawego wykresu
       simData.wykres_dwa = dwaWykresPopup;
-      title(simData.wykres_osieP, 'Prawy wykres');
-      xlabel(simData.wykres_osieP, 'czas');
+      title(simData.wykres_osieP_handle, 'Prawy wykres');
+      xlabel(simData.wykres_osieP_handle, 'czas');
     end
    %% funkcja do edyutowania wykresu i sprawdzania co nowego, dodawanie i zmienianie wykresu + edycja osi ()
     function edycjaWykres(~,~)
       % dodaje tylko y1 y2 dla każdej z funkcji bo obie są zależne od czasu
       % edycja wykres Lewy wykres1
-      ylabel(simData.wykres_osieL, simData.plotNazwy(get(simData.wykres_jeden, 'Value')));
+      ylabel(simData.wykres_osieL_handle, simData.plotNazwy(get(simData.wykres_jeden, 'Value')));
+      plot(simData.wykres_osieL_handle,simData.E1, simData.time, "b.", "markersize", 20);
+      hold(simData.wykres_osieL_handle, 'off');
       %edycja wykres prawy 2
-      ylabel(simData.wykres_osieP, simData.plotNazwy(get(simData.wykres_dwa, 'Value')));
+      ylabel(simData.wykres_osieP_handle, simData.plotNazwy(get(simData.wykres_dwa, 'Value')));
     end
 
     % Funkcja do uruchamiania symulacji
