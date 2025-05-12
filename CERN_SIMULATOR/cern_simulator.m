@@ -359,12 +359,12 @@ function cern_simulator
                           'BackgroundColor', 'white');
     % --- ZMIENNE GLOBALNE dla funkcji TWORZENIE STRUKTÓR DANYCH DLA OBU PARTICLES---
     simData = struct();
-    simData.particle1 = createParticle(1.0, [-0.000001, 0, 0], [0, 0, 0], 'p1', 0.0000000002);
-    simData.particle2 = createParticle(1.0, [0.000002, 0, 0], [0, 0, 0], 'p2', -0.000000001);
+    simData.particle1 = createParticle(1.0, [-0.0001, 0, 0], [0, 0, 0], 'p1', 0.0000000001);
+    simData.particle2 = createParticle(2.0, [0.0002, 0, 0], [0, 0, 0], 'p2', -0.000000002);
     simData.isRunning = false;
     simData.time = 0;
-    simData.dt = 0.05;
-    simData.historyLength = 50;% pokazuje 20 ostatnich dt jako ślad za kulką
+    simData.dt = 0.04;
+    simData.historyLength = 25;% pokazuje 20 ostatnich dt jako ślad za kulką
     simData.p1History = zeros(simData.historyLength, 2);
     simData.p2History = zeros(simData.historyLength, 2);
 %  puste elementy struktury simData do robienia wykresów
@@ -418,6 +418,13 @@ function cern_simulator
         updateParticles();
         simData.time = 0;
         set(timeText, 'String', sprintf('%.2f s', simData.time));
+
+        if isfield(simData, 'czasHistory')
+        % czyszczenie historii wykresow
+          simData.czasHistory = [];
+          simData.plotLewyHistory = [];
+          simData.plotPrawyHistory = [];
+        end
     end
 
     % Funkcja tworząca cząstkę
@@ -505,7 +512,10 @@ function cern_simulator
             % Reset czasu symulacji
             simData.time = 0;
             set(timeText, 'String', sprintf('%.2f s', simData.time));
-
+            % Odśwież wykresy
+            if isfield(simData, 'wykres_osieL_handle') && ishandle(simData.wykres_osieL_handle)
+                edycjaWykres();
+            end
         catch
             errordlg('Podane wartości są nieprawidłowe!', 'Błąd');
         end
@@ -583,95 +593,202 @@ function cern_simulator
         set(momentum1Text, 'String', sprintf('[%.3f, %.3f]', p1(1), p1(2)));
         set(momentum2Text, 'String', sprintf('[%.3f, %.3f]', p2(1), p2(2)));
 
-        if isfield(simData, 'wykresy_osie')
-          disp("wykresy pełne");
+        if isfield(simData, 'wykres_osieL_handle') && ishandle(simData.wykres_osieL_handle)
+          edycjaWykres();
         end
     end
 
-    function dodaj_wykresy(~,~)
-      %disp("dodawanie wykresów i robienie miejsca");
-      positionsInfo = get(simulationPanel, 'Position');
-      set(simulationPanel, 'Position', [positionsInfo(1), 0.32, positionsInfo(3), 0.70]);
-      wielkoscSymulacji = get(simulationAxes, 'DataAspectRatio'); %  otrymuje wszystko jako ( 1 1 1) ;
-      set(simulationAxes, 'DataAspectRatio', [2 3 1]);
+  function dodaj_wykresy(~,~)
+  %disp("dodawanie wykresów i robienie miejsca");
+    positionsInfo = get(simulationPanel, 'Position');
+    set(simulationPanel, 'Position', [positionsInfo(1), 0.32, positionsInfo(3), 0.70]);
+    wielkoscSymulacji = get(simulationAxes, 'DataAspectRatio');
+    set(simulationAxes, 'DataAspectRatio', [2 3 1]);
 
-      wykresPanel =  uipanel('Parent', fig, ...
-                            'Units', 'normalized',...
-                            'Position', [0.30, 0.01, 0.69, 0.30], ...
-                            'Title', 'wykresy panel', ...
-                            'BackgroundColor', colors.panel);
-      wykresOpcjePanel = uipanel('Parent', wykresPanel, ...
-                                'Units', 'normalized', ...
-                                'Position', [0.01, 0.01, 0.15,0.95]
-                                );
-      wykres_osie_lewy = axes('Parent', wykresPanel, ...
-                        'Units', 'normalized', ...
-                        'Position', [0.20, 0.11, 0.30, 0.80],...
-                        'DataAspectRatio', [2 3 1], ...
-                        'Box', 'on', 'XGrid', 'on', 'YGrid', 'on');
-      simData.wykres_osieL_handle = wykres_osie_lewy;
+    wykresPanel = uipanel('Parent', fig, ...
+                      'Units', 'normalized',...
+                      'Position', [0.30, 0.01, 0.69, 0.30], ...
+                      'Title', 'wykresy panel', ...
+                      'BackgroundColor', colors.panel);
 
-      wykres_osie_prawy = axes('Parent', wykresPanel, ...
-                        'Units', 'normalized', ...
-                        'Position', [0.40, 0.11, 0.95, 0.80],...
-                        'DataAspectRatio', [2 3 1], ...
-                        'Box', 'on', 'XGrid', 'on', 'YGrid', 'on');
-      simData.wykres_osieP_handle = wykres_osie_prawy;
+    wykresOpcjePanel = uipanel('Parent', wykresPanel, ...
+                           'Units', 'normalized', ...
+                           'Position', [0.01, 0.01, 0.15, 0.95]
+                           );
 
-      % dodawanie przycisków do definiowania co jest na której osi.
+    % WAŻNA ZMIANA: Poprawione pozycje wykresów, żeby się nie nakładały
+    wykres_osie_lewy = axes('Parent', wykresPanel, ...
+                      'Units', 'normalized', ...
+                      'Position', [0.20, 0.11, 0.30, 0.80],...  % szerokość 0.30
+                      'Box', 'on', 'XGrid', 'on', 'YGrid', 'on');
 
+    wykres_osie_prawy = axes('Parent', wykresPanel, ...
+                       'Units', 'normalized', ...
+                       'Position', [0.55, 0.11, 0.30, 0.80],...  % zaczyna się na 0.55
+                       'Box', 'on', 'XGrid', 'on', 'YGrid', 'on');
+
+    simData.wykres_osieL_handle = wykres_osie_lewy;
+    simData.wykres_osieP_handle = wykres_osie_prawy;
+
+  % dodawanie przycisków do definiowania co jest na której osi.
       opcje_do_wyboru = {
         'Czas',             'time';
         'Energia Całk.',    'totalEnergy';
         'Energia cz. 1',    'E1';
         'Energia cz. 2',    'E2';
-        'SiłaCoulomba',   'F_mag';
-        'Pręd. 1',    'predkosc1';
-        'Pręd. 2',    'predkosc2';
+        'SiłaCoulomba',     'F_mag';
+        'Pręd. 1',          'predkosc1';
+        'Pręd. 2',          'predkosc2';
         'Odległość',        'distance'
       };
-      plotNazwy = opcje_do_wyboru(:, 1); % Nazwy dla użytkownika
-      plotZmienne = opcje_do_wyboru(:, 2);   % nazwy zmiennych
+
+      plotNazwy = opcje_do_wyboru(:, 1);
+      plotZmienne = opcje_do_wyboru(:, 2);
       simData.plotNazwy = plotNazwy;
       simData.plotZmienne = plotZmienne;
-      %LEWY WYKRES
+
+    %LEWY WYKRES
       uicontrol('Parent', wykresOpcjePanel, 'Style', 'text', ...
-              'Units', 'normalized', 'Position', [0.05, 0.85, 0.95, 0.15], ...
-              'String', 'Lewy wykres', 'HorizontalAlignment', 'left');
+           'Units', 'normalized', 'Position', [0.05, 0.85, 0.95, 0.15], ...
+           'String', 'Lewy wykres', 'HorizontalAlignment', 'left');
+
       jedenWykresPopup = uicontrol('Parent', wykresOpcjePanel, 'Style', 'popupmenu', ...
-                         'Units', 'normalized', 'Position', [0.05, 0.60, 0.95, 0.15], ...
-                         'String', plotNazwy,
-                         'Value', 1, ... %
-                         'Callback', @edycjaWykres, ...
-                         'BackgroundColor', 'white');
-      % PRAWY WYKRES
+                            'Units', 'normalized', 'Position', [0.05, 0.60, 0.95, 0.15], ...
+                            'String', plotNazwy,
+                            'Value', 3, ... % Domyślnie 'Energia cz. 1'
+                            'Callback', @edycjaWykres, ...
+                            'BackgroundColor', 'white');
+
+    % PRAWY WYKRES
       uicontrol('Parent', wykresOpcjePanel, 'Style', 'text', ...
-              'Units', 'normalized', 'Position', [0.05, 0.27, 0.95, 0.15], ...
-              'String', 'Prawy wykres: ', 'HorizontalAlignment', 'left');
+           'Units', 'normalized', 'Position', [0.05, 0.27, 0.95, 0.15], ...
+           'String', 'Prawy wykres: ', 'HorizontalAlignment', 'left');
+
       dwaWykresPopup = uicontrol('Parent', wykresOpcjePanel, 'Style', 'popupmenu', ...
-                         'Units', 'normalized', 'Position', [0.05, 0.07, 0.95, 0.20], ...
-                         'String', plotNazwy,
-                         'Value', 1, ... % Domyślnie 'Czas'
-                         'Callback', @edycjaWykres, ...
-                         'BackgroundColor', 'white');
+                          'Units', 'normalized', 'Position', [0.05, 0.07, 0.95, 0.20], ...
+                          'String', plotNazwy,
+                          'Value', 4, ... % Domyślnie 'Energia cz. 2'
+                          'Callback', @edycjaWykres, ...
+                          'BackgroundColor', 'white');
+
       simData.wykres_jeden = jedenWykresPopup;
       title(simData.wykres_osieL_handle, 'Lewy wykres');
-      xlabel(simData.wykres_osieL_handle, 'czas');
-      % dla prawego wykresu
-      simData.wykres_dwa = dwaWykresPopup;
-      title(simData.wykres_osieP_handle, 'Prawy wykres');
-      xlabel(simData.wykres_osieP_handle, 'czas');
+      xlabel(simData.wykres_osieL_handle, 'Czas [s]');
+
+        simData.wykres_dwa = dwaWykresPopup;
+        title(simData.wykres_osieP_handle, 'Prawy wykres');
+        xlabel(simData.wykres_osieP_handle, 'Czas [s]');
+
+        % Inicjalizuj tablice historii przy pierwszym uruchomieniu
+        simData.czasHistory = [];
+        simData.plotLewyHistory = [];
+        simData.plotPrawyHistory = [];
+
+        % Wywołaj edycjaWykres, aby zainicjować wykresy
+        edycjaWykres();
     end
-   %% funkcja do edyutowania wykresu i sprawdzania co nowego, dodawanie i zmienianie wykresu + edycja osi ()
+            %% funkcja do edyutowania wykresu i sprawdzania co nowego, dodawanie i zmienianie wykresu + edycja osi ()
     function edycjaWykres(~,~)
-      % dodaje tylko y1 y2 dla każdej z funkcji bo obie są zależne od czasu
-      % edycja wykres Lewy wykres1
-      ylabel(simData.wykres_osieL_handle, simData.plotNazwy(get(simData.wykres_jeden, 'Value')));
-      plot(simData.wykres_osieL_handle,simData.E1, simData.time, "b.", "markersize", 20);
-      hold(simData.wykres_osieL_handle, 'off');
-      %edycja wykres prawy 2
-      ylabel(simData.wykres_osieP_handle, simData.plotNazwy(get(simData.wykres_dwa, 'Value')));
-    end
+        % Pobierz indeksy wybranych zmiennych z list rozwijanych
+      lewyWykresID = get(simData.wykres_jeden, 'Value');
+      prawyWykresID = get(simData.wykres_dwa, 'Value');
+
+      % Pobierz odpowiadające nazwy zmiennych
+      lewyZmienna = simData.plotZmienne{lewyWykresID};
+      prawyZmienna = simData.plotZmienne{prawyWykresID};
+
+
+      ylabel(simData.wykres_osieL_handle, simData.plotNazwy{lewyWykresID});
+      ylabel(simData.wykres_osieP_handle, simData.plotNazwy{prawyWykresID});
+
+      % Inicjalizacja tablic historii jeśli jeszcze nie istnieją
+      if ~isfield(simData, 'czasHistory') || isempty(simData.czasHistory)
+        simData.czasHistory = simData.time;
+        simData.plotLewyHistory = 0;
+        simData.plotPrawyHistory = 0;
+      end
+
+      % Pobierz aktualną wartość dla lewego wykresu
+    switch lewyZmienna
+        case 'time'
+          lewyValue = simData.time;
+        case 'totalEnergy'
+          lewyValue = simData.totalEnergy;
+        case 'E1'
+          lewyValue = simData.E1;
+        case 'E2'
+          lewyValue = simData.E2;
+        case 'F_mag'
+          lewyValue = simData.F_mag;
+        case 'predkosc1'
+          lewyValue = norm(simData.particle1.velocity(1:2));
+        case 'predkosc2'
+          lewyValue = norm(simData.particle2.velocity(1:2));
+        case 'distance'
+          lewyValue = norm(simData.particle1.position(1:2) - simData.particle2.position(1:2));
+        otherwise
+          lewyValue = 0;
+      end
+
+  % Pobierz aktualną wartość dla prawego wykresu
+      switch prawyZmienna
+        case 'time'
+          prawyValue = simData.time;
+        case 'totalEnergy'
+          prawyValue = simData.totalEnergy;
+        case 'E1'
+          prawyValue = simData.E1;
+        case 'E2'
+          prawyValue = simData.E2;
+        case 'F_mag'
+          prawyValue = simData.F_mag;
+        case 'predkosc1'
+          prawyValue = norm(simData.particle1.velocity(1:2));
+        case 'predkosc2'
+          prawyValue = norm(simData.particle2.velocity(1:2));
+        case 'distance'
+          prawyValue = norm(simData.particle1.position(1:2) - simData.particle2.position(1:2));
+        otherwise
+          prawyValue = 0;
+      end
+
+  % Aktualizuj historię wykresu tylko jeśli symulacja jest uruchomiona
+  % lub gdy tablica historii ma tylko jeden element (inicjalizacja)
+  if simData.isRunning || length(simData.czasHistory) <= 1
+    simData.czasHistory(end+1) = simData.time;
+    simData.plotLewyHistory(end+1) = lewyValue;
+    simData.plotPrawyHistory(end+1) = prawyValue;
+  end
+
+      % Ogranicz rozmiar tablic historii (dla wydajności)
+      if length(simData.czasHistory) > simData.maxPlotHistory
+        simData.czasHistory = simData.czasHistory(end-simData.maxPlotHistory+1:end);
+        simData.plotLewyHistory = simData.plotLewyHistory(end-simData.maxPlotHistory+1:end);
+        simData.plotPrawyHistory = simData.plotPrawyHistory(end-simData.maxPlotHistory+1:end);
+      end
+
+  % KLUCZOWA ZMIANA: Wyraźne ustawienie aktywnej osi przed rysowaniem
+  % Narysuj lewy wykres
+      axes(simData.wykres_osieL_handle); % Ustawienie aktywnej osi
+      #cla; % Wyczyszczenie aktualnej osi
+      plot(simData.czasHistory, simData.plotLewyHistory, 'b-', 'LineWidth', 2);
+      grid on;
+      title(['Wykres: ', simData.plotNazwy{lewyWykresID}]);
+      xlabel('Czas [s]');
+      ylabel(simData.plotNazwy{lewyWykresID});
+
+      % Narysuj prawy wykres
+      axes(simData.wykres_osieP_handle); % Ustawienie aktywnej osi
+      #cla; % Wyczyszczenie aktualnej osi
+      plot(simData.czasHistory, simData.plotPrawyHistory, 'r-', 'LineWidth', 2);
+      grid on;
+      title(['Wykres: ', simData.plotNazwy{prawyWykresID}]);
+      xlabel('Czas [s]');
+      ylabel(simData.plotNazwy{prawyWykresID});
+
+  % Przywróć aktywną oś symulacji, aby nie zakłócać głównego rysunku
+  axes(simulationAxes);
+end
 
     % Funkcja do uruchamiania symulacji
     function startSimulation(~, ~)
@@ -690,12 +807,10 @@ function cern_simulator
     % Pętla symulująca timer
     function timerLoop()
         while simData.isRunning
-            % Wywołanie funkcji aktualizującej symulację
             updateSimulation();
             % Odświeżenie GUI
             drawnow();
-            % Pauza dla lepszej wizualizacji
-            pause(simData.dt); % odpowiednik Period w timerze
+            pause(0.01);
         end
     end
 
