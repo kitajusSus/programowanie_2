@@ -317,4 +317,17 @@ Teraz skupię się na funkcji `edycjaWykres` która bedzie odpowiadać za zmiane
 JUTRO OMAWIANIE TEGO WSZYSTKIEGO KONIEC NA 05.05.2025
 
 
+```bash
+>> warning: base_graphics_object::get_properties: invalid graphics object
+warning: called from
+    delete at line 73 column 5
+    cern_simulator>exitProgram at line 961 column 9
+    close at line 121 column 5
 
+warning: base_graphics_object::get_properties: invalid graphics object
+warning: called from
+    delete at line 73 column 5
+    cern_simulator>exitProgram at line 961 column 9
+    close at line 121 column 5
+
+```

@@ -363,7 +363,7 @@ function cern_simulator
     simData.particle2 = createParticle(2.0, [0.0002, 0, 0], [0, 0, 0], 'p2', -0.000000002);
     simData.isRunning = false;
     simData.time = 0;
-    simData.dt = 0.04;
+    simData.dt = 0.1; #czas
     simData.historyLength = 25;% pokazuje 20 ostatnich dt jako ślad za kulką
     simData.p1History = zeros(simData.historyLength, 2);
     simData.p2History = zeros(simData.historyLength, 2);
@@ -441,9 +441,11 @@ function cern_simulator
     function [F_vec, F_mag] = calcCoulomb(p1, p2)
         % Stała Coulomba
         k = 8.99e9; % N*m^2/C^2
+        simData.k = k;
 
         % Wektor od p1 do p2
         r_vec = p2.position(1:2) - p1.position(1:2);
+        simData.r_vec = r_vec;
         % Dodajemy trzecią składową jeśli jej nie ma
         if length(r_vec) < 3
             r_vec(3) = 0;
@@ -576,11 +578,15 @@ function cern_simulator
         % Obliczanie energii kinetycznych
         E1 = 0.5 * simData.particle1.mass * norm(simData.particle1.velocity)^2;
         E2 = 0.5 * simData.particle2.mass * norm(simData.particle2.velocity)^2;
-
+        % obliczanie energii potencjalnych
+        Pot1 = -simData.k * simData.particle1.charge / norm(simData.r_vec);
+        Pot2 = -simData.k * simData.particle2.charge / norm(simData.r_vec);
         % Obliczanie pędów
         p1 = simData.particle1.mass * simData.particle1.velocity(1:2);
         p2 = simData.particle2.mass * simData.particle2.velocity(1:2);
-        totalEnergy = E1+E2;
+
+        totalEnergy = E1+E2+Pot1+Pot2; # suma energi kinetycznych obu
+        #kq/r DODAC POTENCJALNA ENERGIE DO ENEHGI CALKOWITEJ
         % Aktualizacja pól tekstowych
         set(forceText, 'String', sprintf('%.3e N', F_mag));
         simData.F_mag = F_mag;
@@ -633,9 +639,9 @@ function cern_simulator
   % dodawanie przycisków do definiowania co jest na której osi.
       opcje_do_wyboru = {
         'Czas',             'time';
-        'Energia Całk.',    'totalEnergy';
-        'Energia cz. 1',    'E1';
-        'Energia cz. 2',    'E2';
+        'Energia Całk. ',    'totalEnergy';
+        'Energia kin cz. 1',    'E1';
+        'Energia kin cz. 2',    'E2';
         'SiłaCoulomba',     'F_mag';
         'Pręd. 1',          'predkosc1';
         'Pręd. 2',          'predkosc2';
@@ -810,7 +816,7 @@ function cern_simulator
             updateSimulation();
             % Odświeżenie GUI
             drawnow();
-            pause(0.01);
+            pause(0.001); # PAUZA PAUZA TUTAJ SZUKASZ
         end
     end
 
