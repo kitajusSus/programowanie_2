@@ -46,18 +46,12 @@ function cern_simulator
     title(simulationAxes, 'Symulacja ruchu cząstek na zajecia programowanie title');
     xlabel(simulationAxes, 'X');
     ylabel(simulationAxes, 'Y');
-<<<<<<< HEAD
     disp('simulationAxes created');
     % Konfiguracja elementów panelu kontrolnego (dzielenie  na sekcje/podpanele)
-=======
-<<<<<<< HEAD
     %disp('simulationAxes created');
     % Konfiguracja elementów panelu kontrolnego (dzielimy na sekcje)
-=======
     disp('simulationAxes created');
     % Konfiguracja elementów panelu kontrolnego (dzielenie  na sekcje/podpanele)
->>>>>>> 3f039a5 (zobaczymy)
->>>>>>> 36d2b162b81603a76a18ad5f00a0593aedf3272a
     % Panel cząstki 1
     p1Panel = uipanel('Parent', controlPanel, ...
                      'Units', 'normalized', ...
@@ -372,14 +366,8 @@ function cern_simulator
     simData.particle2 = createParticle(2.0, [0.0002, 0, 0], [0, 0, 0], 'p2', -0.000000002);
     simData.isRunning = false;
     simData.time = 0;
-<<<<<<< HEAD
     simData.dt = 0.1; #czas
-=======
     simData.dt = 0.05;
-<<<<<<< HEAD
-=======
->>>>>>> 3f039a5 (zobaczymy)
->>>>>>> 36d2b162b81603a76a18ad5f00a0593aedf3272a
     simData.historyLength = 25;% pokazuje 20 ostatnich dt jako ślad za kulką
     simData.p1History = zeros(simData.historyLength, 2);
     simData.p2History = zeros(simData.historyLength, 2);
