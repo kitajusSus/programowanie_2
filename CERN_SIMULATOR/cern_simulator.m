@@ -508,9 +508,11 @@ function cern_simulator
                                 'YData', simData.particle2.position(2));
 
             % Aktualizacja historii (wypełniamy aktualną pozycją)
-            simData.p1History = repmat(simData.particle1.position(1:2), simData.historyLength, 1);
-            simData.p2History = repmat(simData.particle2.position(1:2), simData.historyLength, 1);
-
+            %simData.p1History = repmat(simData.particle1.position(1:2), simData.historyLength, 1);
+            %simData.p2History = repmat(simData.particle2.position(1:2), simData.historyLength, 1);
+            % niżej inny wariant na zrobienie tego samego, ale licze na to ze mniej wymagające obliczeniowo
+            simData.p1History = ones(simData.historyLength, 1) * simData.particle1.position(1:2);
+            simData.p2History = ones(simData.historyLength, 1) * simData.particle2.position(1:2);
             % Aktualizacja trajektorii
             set(simData.p1TrajectoryHandle, 'XData', NaN, 'YData', NaN);
             set(simData.p2TrajectoryHandle, 'XData', NaN, 'YData', NaN);
