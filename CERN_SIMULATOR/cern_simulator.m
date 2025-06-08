@@ -55,28 +55,28 @@ function cern_simulator
     % Panel cząstki 1
     p1Panel = uipanel('Parent', controlPanel, ...
                      'Units', 'normalized', ...
-                     'Position', [0.05, 0.76, 0.9, 0.2], ...
+                     'Position', [0.05, 0.79, 0.9, 0.2], ...
                      'Title', 'Cząstka 1 (czerwona)', ...
                      'BackgroundColor', colors.panel);
     %disp('p1Panel created');
     % Panel cząstki 2
     p2Panel = uipanel('Parent', controlPanel, ...
                      'Units', 'normalized', ...
-                     'Position', [0.05, 0.54, 0.9, 0.2], ...
+                     'Position', [0.05, 0.60, 0.9, 0.2], ...
                      'Title', 'Cząstka 2 (niebieska)', ...
                      'BackgroundColor', colors.panel);
     %disp('p2Panel created');
     % Panel przycisków sterujących
     controlButtonsPanel = uipanel('Parent', controlPanel, ...
                                 'Units', 'normalized', ...
-                                'Position', [0.05, 0.38, 0.9, 0.15], ...
+                                'Position', [0.05, 0.42, 0.9, 0.14], ...
                                 'Title', 'Sterowanie', ...
                                 'BackgroundColor', colors.panel);
 
     % Panel informacyjny
     infoPanel = uipanel('Parent', controlPanel, ...
                        'Units', 'normalized', ...
-                       'Position', [0.05, 0.05, 0.9, 0.3], ...
+                       'Position', [0.05, 0.01, 0.95, 0.36], ...
                        'Title', 'Dane symulacji', ...
                        'BackgroundColor', colors.panel);
 
@@ -273,12 +273,12 @@ function cern_simulator
     % Siła Coulomba
     uicontrol('Parent', infoPanel, 'Style', 'text', ...
              'Units', 'normalized', ...
-             'Position', [0.05, 0.85, 0.35, 0.12], ...
+             'Position', [0.05, 0.87, 0.35, 0.08], ...
              'HorizontalAlignment', 'left', ...
              'String', 'Siła Coulomba:');
     forceText = uicontrol('Parent', infoPanel, 'Style', 'text', ...
                          'Units', 'normalized', ...
-                         'Position', [0.45, 0.85, 0.5, 0.12], ...
+                         'Position', [0.45, 0.87, 0.5, 0.08], ...
                          'String', '0 N', ...
                          'HorizontalAlignment', 'left', ...
                          'BackgroundColor', 'white');
@@ -286,26 +286,25 @@ function cern_simulator
     % Energia kinetyczna cząstki 1
     uicontrol('Parent', infoPanel, 'Style', 'text', ...
              'Units', 'normalized', ...
-             'Position', [0.05, 0.71, 0.35, 0.12], ...
+             'Position', [0.05, 0.78, 0.35, 0.08], ...
              'HorizontalAlignment', 'left', ...
              'String', 'E_kinetyczna 1:');
     energy1Text = uicontrol('Parent', infoPanel, 'Style', 'text', ...
                           'Units', 'normalized', ...
-                          'Position', [0.45, 0.71, 0.5, 0.12], ...
+                          'Position', [0.45, 0.78, 0.5, 0.08], ...
                           'String', '0 J', ...
                           'HorizontalAlignment', 'left', ...
                           'BackgroundColor', 'white');
 
     % Energia kinetyczna cząstki 2
-% zwykły blok tekstu
     uicontrol('Parent', infoPanel, 'Style', 'text', ...
              'Units', 'normalized', ...
-             'Position', [0.05, 0.57, 0.35, 0.12], ...
+             'Position', [0.05, 0.67, 0.35, 0.08], ...
              'HorizontalAlignment', 'left', ...
              'String', 'E_kinetyczna 2:');
     energy2Text = uicontrol('Parent', infoPanel, 'Style', 'text', ...
                           'Units', 'normalized', ...
-                          'Position', [0.45, 0.57, 0.5, 0.12], ...
+                          'Position', [0.45, 0.67, 0.5, 0.08], ...
                           'String', '0 J', ...
                           'HorizontalAlignment', 'left', ...
                           'BackgroundColor', 'white');
@@ -313,12 +312,12 @@ function cern_simulator
     % Pęd cząstki 1
     uicontrol('Parent', infoPanel, 'Style', 'text', ...
              'Units', 'normalized', ...
-             'Position', [0.05, 0.43, 0.35, 0.12], ...
+             'Position', [0.05, 0.55, 0.35, 0.08], ...
              'HorizontalAlignment', 'left', ...
              'String', 'Pęd 1 [x,y]:');
     momentum1Text = uicontrol('Parent', infoPanel, 'Style', 'text', ...
                             'Units', 'normalized', ...
-                            'Position', [0.45, 0.43, 0.5, 0.12], ...
+                            'Position', [0.45, 0.55, 0.5, 0.08], ...
                             'String', '[0, 0]', ...
                             'HorizontalAlignment', 'left', ...
                             'BackgroundColor', 'white');
@@ -326,59 +325,78 @@ function cern_simulator
     % Pęd cząstki 2
     uicontrol('Parent', infoPanel, 'Style', 'text', ...
              'Units', 'normalized', ...
-             'Position', [0.05, 0.29, 0.35, 0.12], ...
+             'Position', [0.05, 0.43, 0.35, 0.08], ...
              'HorizontalAlignment', 'left', ...
              'String', 'Pęd 2 [x,y]:');
     momentum2Text = uicontrol('Parent', infoPanel, 'Style', 'text', ...
                             'Units', 'normalized', ...
-                            'Position', [0.45, 0.29, 0.5, 0.12], ...
+                            'Position', [0.45, 0.43, 0.5, 0.08], ...
                             'String', '[0, 0]', ...
                             'HorizontalAlignment', 'left', ...
                             'BackgroundColor', 'white');
 
-    % Czas symulacji
+    % NOWE: Energia potencjalna układu
     uicontrol('Parent', infoPanel, 'Style', 'text', ...
              'Units', 'normalized', ...
-             'Position', [0.05, 0.15, 0.35, 0.12], ...
+             'Position', [0.05, 0.30, 0.35, 0.08], ...
+             'HorizontalAlignment', 'left', ...
+             'String', 'E_potencjalna:');
+    energy_potencjalna = uicontrol('Parent', infoPanel, 'Style', 'text', ...
+                          'Units', 'normalized', ...
+                          'Position', [0.45, 0.30, 0.5, 0.08], ...
+                          'String', '0 J', ...
+                          'HorizontalAlignment', 'left', ...
+                          'BackgroundColor', 'white');
+
+    % Czas symulacji (przesunięty w dół)
+    uicontrol('Parent', infoPanel, 'Style', 'text', ...
+             'Units', 'normalized', ...
+             'Position', [0.05, 0.20, 0.35, 0.08], ...
              'HorizontalAlignment', 'left', ...
              'String', 'Czas symulacji:');
     timeText = uicontrol('Parent', infoPanel, 'Style', 'text', ...
                         'Units', 'normalized', ...
-                        'Position', [0.45, 0.15, 0.5, 0.12], ...
+                        'Position', [0.45, 0.20, 0.5, 0.08], ...
                         'String', '0 s', ...
                         'HorizontalAlignment', 'left', ...
                         'BackgroundColor', 'white');
-    % SUMA OBU ENERGII (SPRAWDZANIE CZY ZACHODZI ZASADA ZACHOWANIA ENERGII)
+    % SUMA OBU ENERGII (teraz energia całkowita układu, przesunięta w dół)
     uicontrol('Parent', infoPanel, 'Style', 'text', ...
              'Units', 'normalized', ...
-             'Position', [0.05, 0.02, 0.35, 0.12], ...
+             'Position', [0.05, 0.1, 0.35, 0.08], ...
              'HorizontalAlignment', 'left', ...
-             'String', 'E_kin SUMA:');
+             'String', 'E_całk. ukladu:'); % Zmieniono etykietę
     energySuma = uicontrol('Parent', infoPanel, 'Style', 'text', ...
                           'Units', 'normalized', ...
-                          'Position', [0.44, 0.02, 0.5, 0.12], ...
+                          'Position', [0.44, 0.1, 0.5, 0.08], ...
                           'String', '0 J', ...
                           'HorizontalAlignment', 'left', ...
                           'BackgroundColor', 'white');
     % --- ZMIENNE GLOBALNE dla funkcji TWORZENIE STRUKTÓR DANYCH DLA OBU PARTICLES---
     simData = struct();
-    simData.particle1 = createParticle(1.0, [-0.0001, 0, 0], [0, 0, 0], 'p1', 0.0000000001);
-    simData.particle2 = createParticle(2.0, [0.0002, 0, 0], [0, 0, 0], 'p2', -0.000000002);
+    % Inicjalizacja pól struktury simData, które będą używane w wielu funkcjach
+    simData.particle1 = createParticle(1.0, [0,0,0], [0,0,0], 'p1', 0); % Wartości zostaną zaktualizowane z GUI
+    simData.particle2 = createParticle(1.0, [0,0,0], [0,0,0], 'p2', 0); % Wartości zostaną zaktualizowane z GUI
     simData.isRunning = false;
     simData.time = 0;
-    simData.dt = 0.1; #czas
     simData.dt = 0.05;
     simData.historyLength = 25;% pokazuje 20 ostatnich dt jako ślad za kulką
     simData.p1History = zeros(simData.historyLength, 2);
     simData.p2History = zeros(simData.historyLength, 2);
-%  puste elementy struktury simData do robienia wykresów
-    simData.wykres_osieLewy = [];       % Uchwyt do osi wykresu (jeśli istnieje)
-    simData.wykres_osiePrawy = [];
-    simData.plotXVarID = '';        % oś X
-    simData.plotYVarID = '';        % zmiennej Y
-    simData.plotLewyHistory = [];      % Historia Lewego wykresu
-    simData.plotPrawyHistory = [];      % Prawy wykres
-    simData.maxPlotHistory = 500;   % Maksymalna długość historii wykresu
+
+    simData.maxPlotHistory = 500; % Maksymalna długość historii wykresu
+
+    % Inicjalizacja pustych tablic historii dla wykresów
+    simData.czasHistory = [];
+    simData.historyTotalEnergy = [];
+    simData.historyE1 = [];
+    simData.historyE2 = [];
+    simData.historyF_mag = [];
+    simData.historyPredkosc1 = [];
+    simData.historyPredkosc2 = [];
+    simData.historyDistance = [];
+    simData.historyPot = []; % NOWE: Historia energii potencjalnej
+    
     % Inicjalizacja grafiki cząstek
     hold(simulationAxes, 'on');
 
@@ -391,8 +409,8 @@ function cern_simulator
                          'MarkerFaceColor', colors.particle2, 'MarkerEdgeColor', 'none');
 
     % Inicjalizacja trajektorii
-    simData.p1TrajectoryHandle = plot(simulationAxes, NaN, NaN, 'r-', 'LineWidth', 1);
-    simData.p2TrajectoryHandle = plot(simulationAxes, NaN, NaN, 'b-', 'LineWidth', 1);
+    simData.p1TrajectoryHandle = plot(simulationAxes, NaN, NaN, 'r', 'LineWidth', 1);
+    simData.p2TrajectoryHandle = plot(simulationAxes, NaN, NaN, 'b', 'LineWidth', 1);
 
     % Inicjalizacja wektorów sił i prędkości
     simData.p1VelocityHandle = quiver(simulationAxes, simData.particle1.position(1), simData.particle1.position(2), ...
@@ -410,27 +428,63 @@ function cern_simulator
 
     hold(simulationAxes, 'off');
 
-    % Wywołanie funkcji inicjalizującej pozycje cząstek
+    % Wywołanie funkcji inicjalizującej pozycje cząstek na podstawie wartości z GUI
+    % Upewni się, że początkowe wartości w strukturze simData są zgodne z GUI
     updateParticles();
 
     % ===== FUNKCJE POMOCNICZE =====
 
+    % Wartości domyślne dla resetowania (zgodne z początkowymi wartościami w GUI)
+    defaultP1Mass = '1.0';
+    defaultP1Charge = '0.0001';
+    defaultP1VelX = '0.0';
+    defaultP1VelY = '1.0';
+    defaultP1PosX = '-15.0';
+    defaultP1PosY = '0.0';
+
+    defaultP2Mass = '2';
+    defaultP2Charge = '0.0001';
+    defaultP2VelX = '0.0';
+    defaultP2VelY = '0.0';
+    defaultP2PosX = '5.0';
+    defaultP2PosY = '0.0';
 
     % Funkcja do resetowania symulacji
     function resetSimulation(~, ~)
         stopSimulation();
-        simData.particle1 = createParticle(1.0, [-0.000001, 0, 0], [0, 0, 0], 'p1', 0.0000000002);
-        simData.particle2 = createParticle(1.0, [0.000002, 0, 0], [0, 0, 0], 'p2', -0.000000001);
-        updateParticles();
+
+        % Ustawianie pól GUI na wartości domyślne
+        set(p1MassEdit, 'String', defaultP1Mass);
+        set(p1ChargeEdit, 'String', defaultP1Charge);
+        set(p1VelocityXEdit, 'String', defaultP1VelX);
+        set(p1VelocityYEdit, 'String', defaultP1VelY);
+        set(p1PositionXEdit, 'String', defaultP1PosX);
+        set(p1PositionYEdit, 'String', defaultP1PosY);
+
+        set(p2MassEdit, 'String', defaultP2Mass);
+        set(p2ChargeEdit, 'String', defaultP2Charge);
+        set(p2VelocityXEdit, 'String', defaultP2VelX);
+        set(p2VelocityYEdit, 'String', defaultP2VelY);
+        set(p2PositionXEdit, 'String', defaultP2PosX);
+        set(p2PositionYEdit, 'String', defaultP2PosY);
+
+        % Reset czasu symulacji
         simData.time = 0;
         set(timeText, 'String', sprintf('%.2f s', simData.time));
 
-        if isfield(simData, 'czasHistory')
-        % czyszczenie historii wykresow
-          simData.czasHistory = [];
-          simData.plotLewyHistory = [];
-          simData.plotPrawyHistory = [];
-        end
+        % Czyszczenie historii wykresów
+        simData.czasHistory = [];
+        simData.historyTotalEnergy = [];
+        simData.historyE1 = [];
+        simData.historyE2 = [];
+        simData.historyF_mag = [];
+        simData.historyPredkosc1 = [];
+        simData.historyPredkosc2 = [];
+        simData.historyDistance = [];
+        simData.historyPot = []; 
+
+        % Wywołanie updateParticles, które odczyta dane z GUI i odświeży wszystko
+        updateParticles();
     end
 
     % Funkcja tworząca cząstkę
@@ -447,18 +501,19 @@ function cern_simulator
     function [F_vec, F_mag] = calcCoulomb(p1, p2)
         % Stała Coulomba
         k = 8.99e9; % N*m^2/C^2
-        simData.k = k;
+        simData.k = k; % Zapisuje stałą Coulomba w simData dla użycia w energii potencjalnej
 
         % Wektor od p1 do p2
         r_vec = p2.position(1:2) - p1.position(1:2);
-        simData.r_vec = r_vec;
-        % Dodajemy trzecią składową jeśli jej nie ma
+        simData.r_vec = r_vec; % Przechowuje wektor pozycji dla obliczeń energii potencjalnej
+
+        % Dodaje trzecią składową jeśli jej nie ma 
         if length(r_vec) < 3
             r_vec(3) = 0;
         end
         r_mag = norm(r_vec);
 
-        % Unikamy dzielenia przez zero
+        % Unika dzielenia przez zero
         if r_mag < 1e-10
             F_vec = [0, 0, 0];
             F_mag = 0;
@@ -475,27 +530,23 @@ function cern_simulator
         F_vec = -F_mag * r_unit;
 
     end
-     % dzięki Bogu istnieje copilot który zrobi za mnie mozolne pisanie, troche było do zmiany
-     %te str2double ale generalnie polecam
      % Funkcja do aktualizacji parametrów cząstek z pól edycji
     function updateParticles(~, ~)
         % Odczytanie wartości z pól edycji
-        % octave odbiera te rzeczy jako string, a ja ich potrzebuje jako floaty, a przez to że używam w testach f32 co najmniej, to bedzie robic str2double
         try
-            simData.particle1.mass = max(0.1, str2num(get(p1MassEdit, 'String')));
+            simData.particle1.mass = max(0.1, str2double(get(p1MassEdit, 'String')));
             simData.particle1.charge = str2double(get(p1ChargeEdit, 'String'));
-            simData.particle1.velocity(1) = str2num(get(p1VelocityXEdit, 'String'));
-            simData.particle1.velocity(2) = str2num(get(p1VelocityYEdit, 'String'));
-            simData.particle1.position(1) = str2num(get(p1PositionXEdit, 'String'));
-            simData.particle1.position(2) = str2num(get(p1PositionYEdit, 'String'));
-            % istnieje szansa że uzywanie float16 sprawi ze program bedzie szybciej działał,
-            % bo to jest połowa obliczeń które trzeba jawnie wynokać 
+            simData.particle1.velocity(1) = str2double(get(p1VelocityXEdit, 'String'));
+            simData.particle1.velocity(2) = str2double(get(p1VelocityYEdit, 'String'));
+            simData.particle1.position(1) = str2double(get(p1PositionXEdit, 'String'));
+            simData.particle1.position(2) = str2double(get(p1PositionYEdit, 'String'));
+
             simData.particle2.mass = max(0.1, str2double(get(p2MassEdit, 'String')));
             simData.particle2.charge = str2double(get(p2ChargeEdit, 'String'));
-            simData.particle2.velocity(1) = str2num(get(p2VelocityXEdit, 'String'));
-            simData.particle2.velocity(2) = str2num(get(p2VelocityYEdit, 'String'));
-            simData.particle2.position(1) = str2num(get(p2PositionXEdit, 'String'));
-            simData.particle2.position(2) = str2num(get(p2PositionYEdit, 'String'));
+            simData.particle2.velocity(1) = str2double(get(p2VelocityXEdit, 'String'));
+            simData.particle2.velocity(2) = str2double(get(p2VelocityYEdit, 'String'));
+            simData.particle2.position(1) = str2double(get(p2PositionXEdit, 'String'));
+            simData.particle2.position(2) = str2double(get(p2PositionYEdit, 'String'));
 
             % Aktualizacja rozmiaru cząstek
             set(simData.p1Handle, 'MarkerSize', 10*simData.particle1.mass);
@@ -507,26 +558,20 @@ function cern_simulator
             set(simData.p2Handle, 'XData', simData.particle2.position(1), ...
                                 'YData', simData.particle2.position(2));
 
-            % Aktualizacja historii (wypełniamy aktualną pozycją)
-            %simData.p1History = repmat(simData.particle1.position(1:2), simData.historyLength, 1);
-            %simData.p2History = repmat(simData.particle2.position(1:2), simData.historyLength, 1);
-            % niżej inny wariant na zrobienie tego samego, ale licze na to ze mniej wymagające obliczeniowo
+            % Aktualizacja historii trajektorii (wypełniamy aktualną pozycją)
             simData.p1History = ones(simData.historyLength, 1) * simData.particle1.position(1:2);
             simData.p2History = ones(simData.historyLength, 1) * simData.particle2.position(1:2);
+            
             % Aktualizacja trajektorii
             set(simData.p1TrajectoryHandle, 'XData', NaN, 'YData', NaN);
             set(simData.p2TrajectoryHandle, 'XData', NaN, 'YData', NaN);
+            
             % Aktualizacja wektorów
             updateVelocityVectors();
-            % Aktualizacja danych symulacji
+            updateForceVectors(); % Wektor siły również wymaga aktualizacji
+
+            % Aktualizacja danych symulacji (co również aktualizuje wykresy)
             updateSimulationData();
-            % Reset czasu symulacji
-            simData.time = 0;
-            set(timeText, 'String', sprintf('%.2f s', simData.time));
-            % Odśwież wykresy
-            if isfield(simData, 'wykres_osieL_handle') && ishandle(simData.wykres_osieL_handle)
-                edycjaWykres();
-            end
         catch
             errordlg('Podane wartości są nieprawidłowe!', 'Błąd');
         end
@@ -535,8 +580,6 @@ function cern_simulator
     % Funkcja do aktualizacji wektorów prędkości
     function updateVelocityVectors()
         scale = 1; % Skala wizualizacji prędkości jak duzy jest wektor.
-        % używany w testach jak potrzebuje wiedzieć czy kierunek jest dobry lub czy rośnie a w wypadku
-        %gdy predkosc sie robi bliska światłu to potrzebuje znać kierunek i to czy rośnie lub  się różnią od siebie. temu mozna ustawić skale
         set(simData.p1VelocityHandle, 'XData', simData.particle1.position(1), ...
                                      'YData', simData.particle1.position(2), ...
                                      'UData', scale * simData.particle1.velocity(1), ...
@@ -554,7 +597,7 @@ function cern_simulator
         F_1_on_2 = -F_2_on_1; % Trzecia zasada dynamiki Newtona
 
         % Ustawienie skali wizualizacji sił
-        scale = 1; % Skala do wizualizacji
+        scale = 0.1; % Skala do wizualizacji - dostosowana, aby wektory nie zasłaniały widoku
 
         % Aktualizacja wektorów sił
         set(simData.p1ForceHandle, 'XData', simData.particle1.position(1), ...
@@ -587,229 +630,322 @@ function cern_simulator
         % Obliczanie energii kinetycznych
         E1 = 0.5 * simData.particle1.mass * norm(simData.particle1.velocity)^2;
         E2 = 0.5 * simData.particle2.mass * norm(simData.particle2.velocity)^2;
-        % obliczanie energii potencjalnych
-        Pot1 = -simData.k * simData.particle1.charge / norm(simData.r_vec);
-        Pot2 = -simData.k * simData.particle2.charge / norm(simData.r_vec);
+        
+        % Obliczanie energii potencjalnej (tylko raz, jest to energia układu)
+        r_mag = norm(simData.r_vec);
+        % Instrukcja diagnostyczna sprawdzająca typ simData przed użyciem simData.k
+        %disp(['Debug: Typ simData przed Pot_elect: ', class(simData)]);
+        if ~isstruct(simData)
+          % Wykryto, że simData nie jest strukturą. Wyrzuca błąd i informację diagnostyczną.
+          error('SKIBIDI! simData jest skalarem, a powiNIEN byc struktura! około linijki 360 jest zdefiniowana simData = struct().. trzeba od tego momentu przesledzic');
+        end
+
+        if r_mag > 1e-10 % Unika dzielenia przez zero w mianowniku energii potencjalnej
+            Pot_elect = simData.k * (simData.particle1.charge * simData.particle2.charge) / r_mag;
+        else
+            Pot_elect = 0; % Ustawia na 0, gdy cząstki są w tej samej pozycji, aby uniknąć nieskończoności
+        end
+        
+        % Energia całkowita (kinetyczna + potencjalna)
+        totalEnergy = E1 + E2 + Pot_elect; 
+        
         % Obliczanie pędów
         p1 = simData.particle1.mass * simData.particle1.velocity(1:2);
         p2 = simData.particle2.mass * simData.particle2.velocity(1:2);
 
-        totalEnergy = E1+E2+Pot1+Pot2; # suma energi kinetycznych obu
-        #kq/r DODAC POTENCJALNA ENERGIE DO ENEHGI CALKOWITEJ
         % Aktualizacja pól tekstowych
         set(forceText, 'String', sprintf('%.3e N', F_mag));
-        simData.F_mag = F_mag;
+        simData.F_mag = F_mag; % Przechowuje dla wykresów
+        
         set(energy1Text, 'String', sprintf('%.3e J', E1));
-        simData.E1 = E1;
+        simData.E1 = E1; % Przechowuje dla wykresów
+        
         set(energy2Text, 'String', sprintf('%.3e J', E2));
-        simData.E2 = E2;
+        simData.E2 = E2; % Przechowuje dla wykresów
+        
+        set(energy_potencjalna, 'String', sprintf('%.3e J', Pot_elect)); % NOWE: Ustawia tekst energii potencjalnej
+        simData.Potencjalna = Pot_elect; % Przechowuje dla wykresów
+        
         set(energySuma, 'String', sprintf('%.3e J', totalEnergy));
-        simData.totalEnergy = totalEnergy;
+        simData.totalEnergy = totalEnergy; % Przechowuje dla wykresów
+
         set(momentum1Text, 'String', sprintf('[%.3f, %.3f]', p1(1), p1(2)));
         set(momentum2Text, 'String', sprintf('[%.3f, %.3f]', p2(1), p2(2)));
 
+        % Aktualizuje wykresy, jeśli są zainicjalizowane
         if isfield(simData, 'wykres_osieL_handle') && ishandle(simData.wykres_osieL_handle)
           edycjaWykres();
         end
     end
 
-  function dodaj_wykresy(~,~)
-  %disp("dodawanie wykresów i robienie miejsca");
-    positionsInfo = get(simulationPanel, 'Position');
-    set(simulationPanel, 'Position', [positionsInfo(1), 0.32, positionsInfo(3), 0.70]);
-    wielkoscSymulacji = get(simulationAxes, 'DataAspectRatio');
-    set(simulationAxes, 'DataAspectRatio', [2 3 1]);
+    function dodaj_wykresy(~,~)
+        % Ustawienie pozycji panelu symulacji, aby zrobić miejsce na wykresy
+        positionsInfo = get(simulationPanel, 'Position');
+        set(simulationPanel, 'Position', [positionsInfo(1), 0.32, positionsInfo(3), 0.70]);
+        % Dostosowanie DataAspectRatio osi symulacji, jeśli to konieczne
+        % set(simulationAxes, 'DataAspectRatio', [2 3 1]); % zakomentowane, aby nie zmieniać proporcji
 
-    wykresPanel = uipanel('Parent', fig, ...
-                      'Units', 'normalized',...
-                      'Position', [0.30, 0.01, 0.69, 0.30], ...
-                      'Title', 'wykresy panel', ...
-                      'BackgroundColor', colors.panel);
+        % Panel na wykresy
+        wykresPanel = uipanel('Parent', fig, ...
+                          'Units', 'normalized',...
+                          'Position', [0.30, 0.01, 0.69, 0.30], ...
+                          'Title', 'Panel wykresów', ...
+                          'BackgroundColor', colors.panel);
 
-    wykresOpcjePanel = uipanel('Parent', wykresPanel, ...
+        % Panel opcji wykresów (popup menu)
+        wykresOpcjePanel = uipanel('Parent', wykresPanel, ...
+                               'Units', 'normalized', ...
+                               'Position', [0.01, 0.01, 0.15, 0.95]);
+
+        % Osie dla lewego wykresu
+        wykres_osie_lewy = axes('Parent', wykresPanel, ...
+                          'Units', 'normalized', ...
+                          'Position', [0.20, 0.11, 0.35, 0.80],...
+                          'Box', 'on', 'XGrid', 'on', 'YGrid', 'on');
+
+        % Osie dla prawego wykresu
+        wykres_osie_prawy = axes('Parent', wykresPanel, ...
                            'Units', 'normalized', ...
-                           'Position', [0.01, 0.01, 0.15, 0.95]
-                           );
+                           'Position', [0.60, 0.11, 0.35, 0.80],...
+                           'Box', 'on', 'XGrid', 'on', 'YGrid', 'on');
 
-    % WAŻNA ZMIANA: Poprawione pozycje wykresów, żeby się nie nakładały
-    wykres_osie_lewy = axes('Parent', wykresPanel, ...
-                      'Units', 'normalized', ...
-                      'Position', [0.20, 0.11, 0.30, 0.80],...  % szerokość 0.30
-                      'Box', 'on', 'XGrid', 'on', 'YGrid', 'on');
+        simData.wykres_osieL_handle = wykres_osie_lewy;
+        simData.wykres_osieP_handle = wykres_osie_prawy;
 
-    wykres_osie_prawy = axes('Parent', wykresPanel, ...
-                       'Units', 'normalized', ...
-                       'Position', [0.55, 0.11, 0.30, 0.80],...  % zaczyna się na 0.55
-                       'Box', 'on', 'XGrid', 'on', 'YGrid', 'on');
+        % --- Inicjalizacja uchwytów/handle linii dla wykresów ---
+        % Te uchwyty będą aktualizowane, a nie tworzone od nowa
+        % Lewy wykres
+        hold(simData.wykres_osieL_handle, 'on');
+        simData.plotLineL_single = plot(simData.wykres_osieL_handle, NaN, NaN, 'b-', 'LineWidth', 2, 'DisplayName', 'Wybrana zmienna');
+        simData.plotLineL_E1 = plot(simData.wykres_osieL_handle, NaN, NaN, 'r', 'LineWidth', 1, 'DisplayName', 'E_kin 1');
+        simData.plotLineL_E2 = plot(simData.wykres_osieL_handle, NaN, NaN, 'g', 'LineWidth', 1, 'DisplayName', 'E_kin 2');
+        simData.plotLineL_pot = plot(simData.wykres_osieL_handle, NaN, NaN, 'm', 'LineWidth', 1, 'DisplayName', 'E_pot.'); % linia dla energii potencjalnej
+        simData.plotLineL_ETotal = plot(simData.wykres_osieL_handle, NaN, NaN, 'k', 'LineWidth', 2, 'DisplayName', 'E_całk.');
+        hold(simData.wykres_osieL_handle, 'off');
 
-    simData.wykres_osieL_handle = wykres_osie_lewy;
-    simData.wykres_osieP_handle = wykres_osie_prawy;
+        %legend(simData.wykres_osieL_handle, 'Location', 'northeast'); 
 
-  % dodawanie przycisków do definiowania co jest na której osi.
-      opcje_do_wyboru = {
-        'Czas',             'time';
-        'Energia Całk. ',    'totalEnergy';
-        'Energia kin cz. 1',    'E1';
-        'Energia kin cz. 2',    'E2';
-        'SiłaCoulomba',     'F_mag';
-        'Pręd. 1',          'predkosc1';
-        'Pręd. 2',          'predkosc2';
-        'Odległość',        'distance'
-      };
+        % Prawy wykres
+        hold(simData.wykres_osieP_handle, 'on');
+        simData.plotLineP_single = plot(simData.wykres_osieP_handle, NaN, NaN, 'b-', 'LineWidth', 2, 'DisplayName', 'Wybrana zmienna');
+        simData.plotLineP_E1 = plot(simData.wykres_osieP_handle, NaN, NaN, 'r', 'LineWidth', 1, 'DisplayName', 'E_kin 1');
+        simData.plotLineP_E2 = plot(simData.wykres_osieP_handle, NaN, NaN, 'g', 'LineWidth', 1, 'DisplayName', 'E_kin 2');
+        simData.plotLineP_pot = plot(simData.wykres_osieP_handle, NaN, NaN, 'm', 'LineWidth', 1, 'DisplayName', 'E_pot.'); %linia dla energii potencjalnej
+        simData.plotLineP_ETotal = plot(simData.wykres_osieP_handle, NaN, NaN, 'k-', 'LineWidth', 2, 'DisplayName', 'E_całk.');
+        hold(simData.wykres_osieP_handle, 'off');
+        legend(simData.wykres_osieP_handle, 'Location', 'northeast'); 
 
-      plotNazwy = opcje_do_wyboru(:, 1);
-      plotZmienne = opcje_do_wyboru(:, 2);
-      simData.plotNazwy = plotNazwy;
-      simData.plotZmienne = plotZmienne;
+        % Opcje do wyboru na wykresach
+        opcje_do_wyboru = {
+          'Czas',             'time';
+          'Energia Całk. ',   'totalEnergy';
+          'Energia kin cz. 1',    'E1';
+          'Energia kin cz. 2',    'E2';
+          'Siła Coulomba',    'F_mag';
+          'Pręd. 1',          'predkosc1';
+          'Pręd. 2',          'predkosc2';
+          'Odległość',        'distance';
+          'Pełny wykres energii', 'allEnergies';
+          'Energia potencjalna ukladu', 'Potencjalna'; 
+        };
 
-    %LEWY WYKRES
-      uicontrol('Parent', wykresOpcjePanel, 'Style', 'text', ...
-           'Units', 'normalized', 'Position', [0.05, 0.85, 0.95, 0.15], ...
-           'String', 'Lewy wykres', 'HorizontalAlignment', 'left');
+        plotNazwy = opcje_do_wyboru(:, 1);
+        plotZmienne = opcje_do_wyboru(:, 2);
+        simData.plotNazwy = plotNazwy;
+        simData.plotZmienne = plotZmienne;
 
-      jedenWykresPopup = uicontrol('Parent', wykresOpcjePanel, 'Style', 'popupmenu', ...
-                            'Units', 'normalized', 'Position', [0.05, 0.60, 0.95, 0.15], ...
+        % LEWY WYKRES - menu rozwijane
+        uicontrol('Parent', wykresOpcjePanel, 'Style', 'text', ...
+             'Units', 'normalized', 'Position', [0.05, 0.85, 0.95, 0.15], ...
+             'String', 'Lewy wykres', 'HorizontalAlignment', 'left');
+
+        jedenWykresPopup = uicontrol('Parent', wykresOpcjePanel, 'Style', 'popupmenu', ...
+                              'Units', 'normalized', 'Position', [0.05, 0.60, 0.95, 0.15], ...
+                              'String', plotNazwy,
+                              'Value', find(strcmp(plotZmienne, 'E1')), ... % Domyślnie 'Energia cz. 1'
+                              'Callback', @edycjaWykres, ...
+                              'BackgroundColor', 'white');
+
+        % PRAWY WYKRES - menu rozwijane
+        uicontrol('Parent', wykresOpcjePanel, 'Style', 'text', ...
+             'Units', 'normalized', 'Position', [0.05, 0.27, 0.95, 0.15], ...
+             'String', 'Prawy wykres: ', 'HorizontalAlignment', 'left');
+
+        dwaWykresPopup = uicontrol('Parent', wykresOpcjePanel, 'Style', 'popupmenu', ...
+                            'Units', 'normalized', 'Position', [0.05, 0.07, 0.95, 0.20], ...
                             'String', plotNazwy,
-                            'Value', 3, ... % Domyślnie 'Energia cz. 1'
+                            'Value', find(strcmp(plotZmienne, 'E2')), ... % Domyślnie 'Energia cz. 2'
                             'Callback', @edycjaWykres, ...
                             'BackgroundColor', 'white');
 
-    % PRAWY WYKRES
-      uicontrol('Parent', wykresOpcjePanel, 'Style', 'text', ...
-           'Units', 'normalized', 'Position', [0.05, 0.27, 0.95, 0.15], ...
-           'String', 'Prawy wykres: ', 'HorizontalAlignment', 'left');
-
-      dwaWykresPopup = uicontrol('Parent', wykresOpcjePanel, 'Style', 'popupmenu', ...
-                          'Units', 'normalized', 'Position', [0.05, 0.07, 0.95, 0.20], ...
-                          'String', plotNazwy,
-                          'Value', 4, ... % Domyślnie 'Energia cz. 2'
-                          'Callback', @edycjaWykres, ...
-                          'BackgroundColor', 'white');
-
-      simData.wykres_jeden = jedenWykresPopup;
-      title(simData.wykres_osieL_handle, 'Lewy wykres');
-      xlabel(simData.wykres_osieL_handle, 'Czas [s]');
-
+        simData.wykres_jeden = jedenWykresPopup;
         simData.wykres_dwa = dwaWykresPopup;
-        title(simData.wykres_osieP_handle, 'Prawy wykres');
-        xlabel(simData.wykres_osieP_handle, 'Czas [s]');
-
-        % Inicjalizuj tablice historii przy pierwszym uruchomieniu
-        simData.czasHistory = [];
-        simData.plotLewyHistory = [];
-        simData.plotPrawyHistory = [];
-
-        % Wywołaj edycjaWykres, aby zainicjować wykresy
+        
+        % Wywołaj edycjaWykres, aby zainicjować wykresy początkowymi danymi
         edycjaWykres();
     end
-            %% funkcja do edyutowania wykresu i sprawdzania co nowego, dodawanie i zmienianie wykresu + edycja osi ()
+
+    % Funkcja do edytowania wykresu i sprawdzania co nowego, dodawanie i zmienianie wykresu + edycja osi ()
     function edycjaWykres(~,~)
-        % Pobierz indeksy wybranych zmiennych z list rozwijanych
-      lewyWykresID = get(simData.wykres_jeden, 'Value');
-      prawyWykresID = get(simData.wykres_dwa, 'Value');
+        % Sprawdza, czy uchwyty osi wykresów istnieją (czyli czy panel wykresów został otwarty)
+        if ~isfield(simData, 'wykres_osieL_handle') || ~ishandle(simData.wykres_osieL_handle)
+            return; % Wykresy nie są zainicjalizowane, kończy działanie funkcji
+        end
 
-      % Pobierz odpowiadające nazwy zmiennych
-      lewyZmienna = simData.plotZmienne{lewyWykresID};
-      prawyZmienna = simData.plotZmienne{prawyWykresID};
+        % Pobiera indeksy wybranych zmiennych z list rozwijanych
+        lewyWykresID = get(simData.wykres_jeden, 'Value');
+        prawyWykresID = get(simData.wykres_dwa, 'Value');
+
+        % Pobiera odpowiadające nazwy zmiennych
+        lewyZmienna = simData.plotZmienne{lewyWykresID};
+        prawyZmienna = simData.plotZmienne{prawyWykresID};
+
+        % --- Aktualizacja lewego wykresu ---
+        axes(simData.wykres_osieL_handle); % Ustawia aktywną oś dla lewego wykresu
+        xlabel('Czas [s]');
+        grid on;
+        
+        % Ukrywa wszystkie linie początkowo na lewym wykresie
+        set([simData.plotLineL_single, simData.plotLineL_E1, simData.plotLineL_E2, simData.plotLineL_pot, simData.plotLineL_ETotal], 'Visible', 'off');
+        
+        if strcmp(lewyZmienna, 'allEnergies')
+            title('Wykres: Wszystkie Energie');
+            ylabel('Energia [J]');
+            % Ustawia dane i pokazuje linie dla wszystkich energii
+            set(simData.plotLineL_E1, 'XData', simData.czasHistory, 'YData', simData.historyE1, 'Visible', 'on');
+            set(simData.plotLineL_E2, 'XData', simData.czasHistory, 'YData', simData.historyE2, 'Visible', 'on');
+            set(simData.plotLineL_pot, 'XData', simData.czasHistory, 'YData', simData.historyPot, 'Visible', 'on'); % NOWE: ustawia energię potencjalną
+            set(simData.plotLineL_ETotal, 'XData', simData.czasHistory, 'YData', simData.historyTotalEnergy, 'Visible', 'on');
+            
+            % Dane do automatycznego skalowania osi Y
+            allYDataL = [simData.historyE1(:); simData.historyE2(:); simData.historyPot(:); simData.historyTotalEnergy(:)];
+        else
+            title(['Wykres: ', simData.plotNazwy{lewyWykresID}]);
+            ylabel(simData.plotNazwy{lewyWykresID});
+            % Określa, którą historię danych użyć dla pojedynczego wykresu
+            switch lewyZmienna
+                case 'time'
+                    plotDataL = simData.czasHistory;
+                case 'totalEnergy'
+                    plotDataL = simData.historyTotalEnergy;
+                case 'E1'
+                    plotDataL = simData.historyE1;
+                case 'E2'
+                    plotDataL = simData.historyE2;
+                case 'F_mag'
+                    plotDataL = simData.historyF_mag;
+                case 'predkosc1'
+                    plotDataL = simData.historyPredkosc1;
+                case 'predkosc2'
+                    plotDataL = simData.historyPredkosc2;
+                case 'distance'
+                    plotDataL = simData.historyDistance;
+                case 'Potencjalna' 
+                    plotDataL = simData.historyPot;
+                otherwise
+                    plotDataL = [];
+            end
+            % Ustawia dane i pokazuje linię dla wybranej zmiennej
+            set(simData.plotLineL_single, 'XData', simData.czasHistory, 'YData', plotDataL, 'Visible', 'on');
+            
+            % Dane do automatycznego skalowania osi Y
+            allYDataL = plotDataL(:);
+        end
+        
+        % Automatyczne skalowanie osi Y dla lewego wykresu
+        if ~isempty(allYDataL) && ~all(isnan(allYDataL)) % Upewnia się, że dane nie są puste ani same NaN
+            minY = min(allYDataL);
+            maxY = max(allYDataL);
+            yMargin = (maxY - minY) * 0.1; % 10% margines
+            if yMargin == 0
+                yMargin = 0.1 * abs(minY);
+                if yMargin == 0
+                    yMargin = 0.1; 
+                end
+            end
+            set(simData.wykres_osieL_handle, 'YLim', [minY - yMargin, maxY + yMargin]);
+        else % Jeśli danych brak, resetuje oś Y do domyślnego stanu
+            set(simData.wykres_osieL_handle, 'YLimMode', 'auto');
+        end
 
 
-      ylabel(simData.wykres_osieL_handle, simData.plotNazwy{lewyWykresID});
-      ylabel(simData.wykres_osieP_handle, simData.plotNazwy{prawyWykresID});
+        % --- Aktualizacja prawego wykresu ---
+        axes(simData.wykres_osieP_handle); % Ustawia aktywną oś dla prawego wykresu
+        xlabel('Czas [s]');
+        grid on;
 
-      % Inicjalizacja tablic historii jeśli jeszcze nie istnieją
-      if ~isfield(simData, 'czasHistory') || isempty(simData.czasHistory)
-        simData.czasHistory = simData.time;
-        simData.plotLewyHistory = 0;
-        simData.plotPrawyHistory = 0;
-      end
+        % Ukrywa wszystkie linie początkowo na prawym wykresie
+        set([simData.plotLineP_single, simData.plotLineP_E1, simData.plotLineP_E2, simData.plotLineP_pot, simData.plotLineP_ETotal], 'Visible', 'off'); % NOWE: dodano plotLineP_pot
 
-      % Pobierz aktualną wartość dla lewego wykresu
-    switch lewyZmienna
-        case 'time'
-          lewyValue = simData.time;
-        case 'totalEnergy'
-          lewyValue = simData.totalEnergy;
-        case 'E1'
-          lewyValue = simData.E1;
-        case 'E2'
-          lewyValue = simData.E2;
-        case 'F_mag'
-          lewyValue = simData.F_mag;
-        case 'predkosc1'
-          lewyValue = norm(simData.particle1.velocity(1:2));
-        case 'predkosc2'
-          lewyValue = norm(simData.particle2.velocity(1:2));
-        case 'distance'
-          lewyValue = norm(simData.particle1.position(1:2) - simData.particle2.position(1:2));
-        otherwise
-          lewyValue = 0;
-      end
+        if strcmp(prawyZmienna, 'allEnergies')
+            title('Wykres: Wszystkie Energie');
+            ylabel('Energia [J]');
+            % Ustawia dane i pokazuje linie dla wszystkich energii
+            set(simData.plotLineP_E1, 'XData', simData.czasHistory, 'YData', simData.historyE1, 'Visible', 'on');
+            set(simData.plotLineP_E2, 'XData', simData.czasHistory, 'YData', simData.historyE2, 'Visible', 'on');
+            set(simData.plotLineP_pot, 'XData', simData.czasHistory, 'YData', simData.historyPot, 'Visible', 'on'); % NOWE: ustawia energię potencjalną
+            set(simData.plotLineP_ETotal, 'XData', simData.czasHistory, 'YData', simData.historyTotalEnergy, 'Visible', 'on');
+            
+            % Dane do automatycznego skalowania osi Y
+            allYDataP = [simData.historyE1(:); simData.historyE2(:); simData.historyPot(:); simData.historyTotalEnergy(:)];
+        else
+            title(['Wykres: ', simData.plotNazwy{prawyWykresID}]);
+            ylabel(simData.plotNazwy{prawyWykresID});
+            % Określa, którą historię danych użyć dla pojedynczego wykresu
+            switch prawyZmienna
+                case 'time'
+                    plotDataP = simData.czasHistory;
+                case 'totalEnergy'
+                    plotDataP = simData.historyTotalEnergy;
+                case 'E1'
+                    plotDataP = simData.historyE1;
+                case 'E2'
+                    plotDataP = simData.historyE2;
+                case 'F_mag'
+                    plotDataP = simData.historyF_mag;
+                case 'predkosc1'
+                    plotDataP = simData.historyPredkosc1;
+                case 'predkosc2'
+                    plotDataP = simData.historyPredkosc2;
+                case 'distance'
+                    plotDataP = simData.historyDistance;
+                case 'Potencjalna' 
+                    plotDataP = simData.historyPot;
+                otherwise
+                    plotDataP = [];
+            end
+            % Ustawia dane i pokazuje linię dla wybranej zmiennej
+            set(simData.plotLineP_single, 'XData', simData.czasHistory, 'YData', plotDataP, 'Visible', 'on');
+            
+            % Dane do automatycznego skalowania osi Y
+            allYDataP = plotDataP(:);
+        end
 
-  % Pobierz aktualną wartość dla prawego wykresu
-      switch prawyZmienna
-        case 'time'
-          prawyValue = simData.time;
-        case 'totalEnergy'
-          prawyValue = simData.totalEnergy;
-        case 'E1'
-          prawyValue = simData.E1;
-        case 'E2'
-          prawyValue = simData.E2;
-        case 'F_mag'
-          prawyValue = simData.F_mag;
-        case 'predkosc1'
-          prawyValue = norm(simData.particle1.velocity(1:2));
-        case 'predkosc2'
-          prawyValue = norm(simData.particle2.velocity(1:2));
-        case 'distance'
-          prawyValue = norm(simData.particle1.position(1:2) - simData.particle2.position(1:2));
-        otherwise
-          prawyValue = 0;
-      end
+        % Automatyczne skalowanie osi Y dla prawego wykresu
+        if ~isempty(allYDataP) && ~all(isnan(allYDataP)) 
+            minY = min(allYDataP);
+            maxY = max(allYDataP);
+            yMargin = (maxY - minY) * 0.1; % 10% margines
+            if yMargin == 0 
+                yMargin = 0.1 * abs(minY);
+                if yMargin == 0
+                    yMargin = 0.1; % Domyślny margines
+                end
+            end
+            set(simData.wykres_osieP_handle, 'YLim', [minY - yMargin, maxY + yMargin]);
+        else % Jeśli danych brak, resetuje oś Y do domyślnego stanu
+            set(simData.wykres_osieP_handle, 'YLimMode', 'auto');
+        end
 
-  % Aktualizuj historię wykresu tylko jeśli symulacja jest uruchomiona
-    %  lub gdy tablica historii ma tylko jeden element (inicjalizacja)
-      if simData.isRunning || length(simData.czasHistory) <= 1
-        simData.czasHistory(end+1) = simData.time;
-        simData.plotLewyHistory(end+1) = lewyValue;
-        simData.plotPrawyHistory(end+1) = prawyValue;
-      end
-
-      % Ogranicz rozmiar tablic historii (dla wydajności)
-      if length(simData.czasHistory) > simData.maxPlotHistory
-        simData.czasHistory = simData.czasHistory(end-simData.maxPlotHistory+1:end);
-        simData.plotLewyHistory = simData.plotLewyHistory(end-simData.maxPlotHistory+1:end);
-        simData.plotPrawyHistory = simData.plotPrawyHistory(end-simData.maxPlotHistory+1:end);
-      end
-
-  % KLUCZOWA ZMIANA: Wyraźne ustawienie aktywnej osi przed rysowaniem
-  % Narysuj lewy wykres
-      axes(simData.wykres_osieL_handle); % Ustawienie aktywnej osi
-      #cla; % Wyczyszczenie aktualnej osi
-      plot(simData.czasHistory, simData.plotLewyHistory, 'b-', 'LineWidth', 2);
-      grid on;
-      title(['Wykres: ', simData.plotNazwy{lewyWykresID}]);
-      xlabel('Czas [s]');
-      ylabel(simData.plotNazwy{lewyWykresID});
-
-      % Narysuj prawy wykres
-      axes(simData.wykres_osieP_handle); % Ustawienie aktywnej osi
-      #cla; % Wyczyszczenie aktualnej osi
-      plot(simData.czasHistory, simData.plotPrawyHistory, 'r-', 'LineWidth', 2);
-      grid on;
-      title(['Wykres: ', simData.plotNazwy{prawyWykresID}]);
-      xlabel('Czas [s]');
-      ylabel(simData.plotNazwy{prawyWykresID});
-
-      % Przywróć aktywną oś symulacji, aby nie zakłócać głównego rysunku
-      axes(simulationAxes);
+        
+        axes(simulationAxes);
     end
 
     % Funkcja do uruchamiania symulacji
     function startSimulation(~, ~)
         if ~simData.isRunning
             simData.isRunning = true;
-            % Uruchamiamy pętlę symulacji
+            % Uruchamia pętlę symulacji
             timerLoop();
         end
     end
@@ -823,9 +959,9 @@ function cern_simulator
     function timerLoop()
         while simData.isRunning
             updateSimulation();
-            % Odświeżenie GUI
+            % Odświeża GUI
             drawnow();
-            pause(0.001); # PAUZA PAUZA TUTAJ SZUKASZ
+            pause(0.02); % Czas pauzy,ok 50fps 
         end
     end
 
@@ -859,8 +995,8 @@ function cern_simulator
         simData.particle2.position(1:2) = simData.particle2.position(1:2) + simData.particle2.velocity(1:2) * simData.dt;
 
         % Sprawdzanie odbicia od ścian (idealne sprężyste odbicie)
-        xlim = get(simulationAxes, 'XLim'); %granica osi x
-        ylim = get(simulationAxes, 'YLim'); %granica osi y
+        xlim = get(simulationAxes, 'XLim'); % Pobiera granice osi X
+        ylim = get(simulationAxes, 'YLim'); % Pobiera granice osi Y
 
         % Odbicie cząstki 1 od ścian
         if simData.particle1.position(1) - simData.particle1.mass < xlim(1)
@@ -898,34 +1034,40 @@ function cern_simulator
 
         % Sprawdzanie kolizji między cząstkami
         distance = norm(simData.particle1.position(1:2) - simData.particle2.position(1:2));
-        kolizja_gdy = (simData.particle1.mass + simData.particle2.mass)/2;
+        % Używa rzeczywistego rozmiaru cząstki do określenia warunku kolizji. Zakłada, że MarkerSize = 10 * mass,
+        % więc promień cząstki jest w przybliżeniu równy jej masie podzielonej przez 2 (0.5 * MarkerSize / 10 = 0.5 * mass).
+        kolizja_gdy = (simData.particle1.mass + simData.particle2.mass) * 0.5;
 
-         %zderzenia
+         % Realizuje zderzenia
         if distance <= kolizja_gdy
 
             % Wektor łączący środki cząstek
-            r_vec = simData.particle2.position(1:2) - simData.particle1.position(1:2);
-            r_unit = r_vec / norm(r_vec);
+            r_vec_collision = simData.particle2.position(1:2) - simData.particle1.position(1:2);
+            r_unit_collision = r_vec_collision / norm(r_vec_collision);
 
             % Składowe prędkości wzdłuż kierunku zderzenia
-            v1_proj = dot(simData.particle1.velocity(1:2), r_unit);
-            v2_proj = dot(simData.particle2.velocity(1:2), r_unit);
+            v1_proj = dot(simData.particle1.velocity(1:2), r_unit_collision);
+            v2_proj = dot(simData.particle2.velocity(1:2), r_unit_collision);
 
-            % Obliczenie nowych prędkości (wymiana pędów)
+            % Oblicza nowe prędkości (wymiana pędów dla idealnie sprężystego zderzenia 2D)
             m1 = simData.particle1.mass;
             m2 = simData.particle2.mass;
 
             v1_new = ((m1 - m2) * v1_proj + 2 * m2 * v2_proj) / (m1 + m2);
             v2_new = ((m2 - m1) * v2_proj + 2 * m1 * v1_proj) / (m1 + m2);
 
-            % Aktualizacja składowych prędkości wzdłuż kierunku zderzenia
-            simData.particle1.velocity(1:2) = simData.particle1.velocity(1:2) + (v1_new - v1_proj) * r_unit;
-            simData.particle2.velocity(1:2) = simData.particle2.velocity(1:2) + (v2_new - v2_proj) * r_unit;
+            % Aktualizuje składowe prędkości prostopadłe do kierunku zderzenia
+            v1_perp = simData.particle1.velocity(1:2) - v1_proj * r_unit_collision;
+            v2_perp = simData.particle2.velocity(1:2) - v2_proj * r_unit_collision;
 
-            % Odsunięcie cząstek, aby uniknąć "przyklejania"
+            % Oblicza nowe całkowite prędkości
+            simData.particle1.velocity(1:2) = v1_new * r_unit_collision + v1_perp;
+            simData.particle2.velocity(1:2) = v2_new * r_unit_collision + v2_perp;
+
+            % Odsuwa cząstki, aby uniknąć "przyklejania" po kolizji
             overlap = kolizja_gdy - distance;
-            simData.particle1.position(1:2) = simData.particle1.position(1:2) - 0.5 * overlap * r_unit;
-            simData.particle2.position(1:2) = simData.particle2.position(1:2) + 0.5 * overlap * r_unit;
+            simData.particle1.position(1:2) = simData.particle1.position(1:2) - 0.5 * overlap * r_unit_collision;
+            simData.particle2.position(1:2) = simData.particle2.position(1:2) + 0.5 * overlap * r_unit_collision;
         end
 
         % Aktualizacja pozycji cząstek na rysunku
@@ -946,10 +1088,35 @@ function cern_simulator
         updateVelocityVectors();
         updateForceVectors();
 
-        % Aktualizacja danych symulacji
+        % Dodaje aktualne dane do historii wykresów
+        simData.czasHistory(end+1) = simData.time;
+        simData.historyTotalEnergy(end+1) = simData.totalEnergy;
+        simData.historyE1(end+1) = simData.E1;
+        simData.historyE2(end+1) = simData.E2;
+        simData.historyF_mag(end+1) = simData.F_mag;
+        simData.historyPredkosc1(end+1) = norm(simData.particle1.velocity(1:2));
+        simData.historyPredkosc2(end+1) = norm(simData.particle2.velocity(1:2));
+        simData.historyDistance(end+1) = distance; % Aktualna odległość
+        simData.historyPot(end+1) = simData.Potencjalna; % NOWE: Dodaje energię potencjalną do historii
+
+        % Ogranicza rozmiar tablic historii (dla wydajności)
+        if length(simData.czasHistory) > simData.maxPlotHistory
+            startIndex = length(simData.czasHistory) - simData.maxPlotHistory + 1;
+            simData.czasHistory = simData.czasHistory(startIndex:end);
+            simData.historyTotalEnergy = simData.historyTotalEnergy(startIndex:end);
+            simData.historyE1 = simData.historyE1(startIndex:end);
+            simData.historyE2 = simData.historyE2(startIndex:end);
+            simData.historyF_mag = simData.historyF_mag(startIndex:end);
+            simData.historyPredkosc1 = simData.historyPredkosc1(startIndex:end);
+            simData.historyPredkosc2 = simData.historyPredkosc2(startIndex:end);
+            simData.historyDistance = simData.historyDistance(startIndex:end);
+            simData.historyPot = simData.historyPot(startIndex:end); % NOWE: ogranicza historię energii potencjalnej
+        end
+
+        % Aktualizacja danych symulacji (co również aktualizuje wykresy)
         updateSimulationData();
 
-        % Aktualizacja pól edycji
+        % Aktualizacja pól edycji (dla wartości zmieniających się dynamicznie)
         set(p1VelocityXEdit, 'String', sprintf('%.2f', simData.particle1.velocity(1)));
         set(p1VelocityYEdit, 'String', sprintf('%.2f', simData.particle1.velocity(2)));
         set(p1PositionXEdit, 'String', sprintf('%.2f', simData.particle1.position(1)));
