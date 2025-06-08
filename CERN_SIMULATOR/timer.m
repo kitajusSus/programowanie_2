@@ -1,4 +1,4 @@
-% Zamiast użycia obiektu timer, można stworzyć prostą funkcję zastępczą
+
 % który emuluje działanie timera za pomocą pause i drawnow
 
 function timer(callback_func, period)
