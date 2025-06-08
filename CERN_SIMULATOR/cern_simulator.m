@@ -1,6 +1,6 @@
 function cern_simulator
-    % Programowanie skibdi - poprzednia nazwa to cern simulator bo zderzenia cząstek ale działa jako skibdi simulatok
-    % Autor: kb89219
+    % Programowanie  - poprzednia nazwa to cern_simulator
+    % Autor: 89219
     % Data: 2025-04-07
     %disp('program start');
     %graphics_toolbox = 'qt';
@@ -46,8 +46,13 @@ function cern_simulator
     title(simulationAxes, 'Symulacja ruchu cząstek na zajecia programowanie title');
     xlabel(simulationAxes, 'X');
     ylabel(simulationAxes, 'Y');
+<<<<<<< HEAD
     %disp('simulationAxes created');
     % Konfiguracja elementów panelu kontrolnego (dzielimy na sekcje)
+=======
+    disp('simulationAxes created');
+    % Konfiguracja elementów panelu kontrolnego (dzielenie  na sekcje/podpanele)
+>>>>>>> 3f039a5 (zobaczymy)
     % Panel cząstki 1
     p1Panel = uipanel('Parent', controlPanel, ...
                      'Units', 'normalized', ...
@@ -362,7 +367,11 @@ function cern_simulator
     simData.particle2 = createParticle(2.0, [0.0002, 0, 0], [0, 0, 0], 'p2', -0.000000002);
     simData.isRunning = false;
     simData.time = 0;
+<<<<<<< HEAD
     simData.dt = 0.1; #czas
+=======
+    simData.dt = 0.05;
+>>>>>>> 3f039a5 (zobaczymy)
     simData.historyLength = 25;% pokazuje 20 ostatnich dt jako ślad za kulką
     simData.p1History = zeros(simData.historyLength, 2);
     simData.p2History = zeros(simData.historyLength, 2);
@@ -414,6 +423,8 @@ function cern_simulator
     % Funkcja do resetowania symulacji
     function resetSimulation(~, ~)
         stopSimulation();
+        simData.particle1 = createParticle(1.0, [-0.000001, 0, 0], [0, 0, 0], 'p1', 0.0000000002);
+        simData.particle2 = createParticle(1.0, [0.000002, 0, 0], [0, 0, 0], 'p2', -0.000000001);
         updateParticles();
         simData.time = 0;
         set(timeText, 'String', sprintf('%.2f s', simData.time));
@@ -468,26 +479,27 @@ function cern_simulator
         F_vec = -F_mag * r_unit;
 
     end
-% dzięki Bogu istnieje copilot który zrobi za mnie mozolne pisanie, troche było do zmiany
-%te str2double ale generalnie polecam
-    % Funkcja do aktualizacji parametrów cząstek z pól edycji
+     % dzięki Bogu istnieje copilot który zrobi za mnie mozolne pisanie, troche było do zmiany
+     %te str2double ale generalnie polecam
+     % Funkcja do aktualizacji parametrów cząstek z pól edycji
     function updateParticles(~, ~)
         % Odczytanie wartości z pól edycji
         % octave odbiera te rzeczy jako string, a ja ich potrzebuje jako floaty, a przez to że używam w testach f32 co najmniej, to bedzie robic str2double
         try
-            simData.particle1.mass = max(0.1, str2double(get(p1MassEdit, 'String')));
+            simData.particle1.mass = max(0.1, str2num(get(p1MassEdit, 'String')));
             simData.particle1.charge = str2double(get(p1ChargeEdit, 'String'));
-            simData.particle1.velocity(1) = str2double(get(p1VelocityXEdit, 'String'));
-            simData.particle1.velocity(2) = str2double(get(p1VelocityYEdit, 'String'));
-            simData.particle1.position(1) = str2double(get(p1PositionXEdit, 'String'));
-            simData.particle1.position(2) = str2double(get(p1PositionYEdit, 'String'));
-
+            simData.particle1.velocity(1) = str2num(get(p1VelocityXEdit, 'String'));
+            simData.particle1.velocity(2) = str2num(get(p1VelocityYEdit, 'String'));
+            simData.particle1.position(1) = str2num(get(p1PositionXEdit, 'String'));
+            simData.particle1.position(2) = str2num(get(p1PositionYEdit, 'String'));
+            % istnieje szansa że uzywanie float16 sprawi ze program bedzie szybciej działał,
+            % bo to jest połowa obliczeń które trzeba jawnie wynokać 
             simData.particle2.mass = max(0.1, str2double(get(p2MassEdit, 'String')));
             simData.particle2.charge = str2double(get(p2ChargeEdit, 'String'));
-            simData.particle2.velocity(1) = str2double(get(p2VelocityXEdit, 'String'));
-            simData.particle2.velocity(2) = str2double(get(p2VelocityYEdit, 'String'));
-            simData.particle2.position(1) = str2double(get(p2PositionXEdit, 'String'));
-            simData.particle2.position(2) = str2double(get(p2PositionYEdit, 'String'));
+            simData.particle2.velocity(1) = str2num(get(p2VelocityXEdit, 'String'));
+            simData.particle2.velocity(2) = str2num(get(p2VelocityYEdit, 'String'));
+            simData.particle2.position(1) = str2num(get(p2PositionXEdit, 'String'));
+            simData.particle2.position(2) = str2num(get(p2PositionYEdit, 'String'));
 
             % Aktualizacja rozmiaru cząstek
             set(simData.p1Handle, 'MarkerSize', 10*simData.particle1.mass);
