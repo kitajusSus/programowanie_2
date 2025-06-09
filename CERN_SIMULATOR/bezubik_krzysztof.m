@@ -1,4 +1,4 @@
-function cern_simulator
+function bezubik_krzysztof
     % Programowanie  - poprzednia nazwa to cern_simulator
     % Autor: 89219
     % Data: 2025-04-07
@@ -396,7 +396,7 @@ function cern_simulator
     simData.historyPredkosc2 = [];
     simData.historyDistance = [];
     simData.historyPot = []; % NOWE: Historia energii potencjalnej
-    
+
     % Inicjalizacja grafiki cząstek
     hold(simulationAxes, 'on');
 
@@ -481,7 +481,7 @@ function cern_simulator
         simData.historyPredkosc1 = [];
         simData.historyPredkosc2 = [];
         simData.historyDistance = [];
-        simData.historyPot = []; 
+        simData.historyPot = [];
 
         % Wywołanie updateParticles, które odczyta dane z GUI i odświeży wszystko
         updateParticles();
@@ -507,7 +507,7 @@ function cern_simulator
         r_vec = p2.position(1:2) - p1.position(1:2);
         simData.r_vec = r_vec; % Przechowuje wektor pozycji dla obliczeń energii potencjalnej
 
-        % Dodaje trzecią składową jeśli jej nie ma 
+        % Dodaje trzecią składową jeśli jej nie ma
         if length(r_vec) < 3
             r_vec(3) = 0;
         end
@@ -561,11 +561,11 @@ function cern_simulator
             % Aktualizacja historii trajektorii (wypełniamy aktualną pozycją)
             simData.p1History = ones(simData.historyLength, 1) * simData.particle1.position(1:2);
             simData.p2History = ones(simData.historyLength, 1) * simData.particle2.position(1:2);
-            
+
             % Aktualizacja trajektorii
             set(simData.p1TrajectoryHandle, 'XData', NaN, 'YData', NaN);
             set(simData.p2TrajectoryHandle, 'XData', NaN, 'YData', NaN);
-            
+
             % Aktualizacja wektorów
             updateVelocityVectors();
             updateForceVectors(); % Wektor siły również wymaga aktualizacji
@@ -630,7 +630,7 @@ function cern_simulator
         % Obliczanie energii kinetycznych
         E1 = 0.5 * simData.particle1.mass * norm(simData.particle1.velocity)^2;
         E2 = 0.5 * simData.particle2.mass * norm(simData.particle2.velocity)^2;
-        
+
         % Obliczanie energii potencjalnej (tylko raz, jest to energia układu)
         r_mag = norm(simData.r_vec);
         % Instrukcja diagnostyczna sprawdzająca typ simData przed użyciem simData.k
@@ -645,10 +645,10 @@ function cern_simulator
         else
             Pot_elect = 0; % Ustawia na 0, gdy cząstki są w tej samej pozycji, aby uniknąć nieskończoności
         end
-        
+
         % Energia całkowita (kinetyczna + potencjalna)
-        totalEnergy = E1 + E2 + Pot_elect; 
-        
+        totalEnergy = E1 + E2 + Pot_elect;
+
         % Obliczanie pędów
         p1 = simData.particle1.mass * simData.particle1.velocity(1:2);
         p2 = simData.particle2.mass * simData.particle2.velocity(1:2);
@@ -656,16 +656,16 @@ function cern_simulator
         % Aktualizacja pól tekstowych
         set(forceText, 'String', sprintf('%.3e N', F_mag));
         simData.F_mag = F_mag; % Przechowuje dla wykresów
-        
+
         set(energy1Text, 'String', sprintf('%.3e J', E1));
         simData.E1 = E1; % Przechowuje dla wykresów
-        
+
         set(energy2Text, 'String', sprintf('%.3e J', E2));
         simData.E2 = E2; % Przechowuje dla wykresów
-        
+
         set(energy_potencjalna, 'String', sprintf('%.3e J', Pot_elect)); % NOWE: Ustawia tekst energii potencjalnej
         simData.Potencjalna = Pot_elect; % Przechowuje dla wykresów
-        
+
         set(energySuma, 'String', sprintf('%.3e J', totalEnergy));
         simData.totalEnergy = totalEnergy; % Przechowuje dla wykresów
 
@@ -723,7 +723,7 @@ function cern_simulator
         simData.plotLineL_ETotal = plot(simData.wykres_osieL_handle, NaN, NaN, 'k', 'LineWidth', 2, 'DisplayName', 'E_całk.');
         hold(simData.wykres_osieL_handle, 'off');
 
-        %legend(simData.wykres_osieL_handle, 'Location', 'northeast'); 
+        %legend(simData.wykres_osieL_handle, 'Location', 'northeast');
 
         % Prawy wykres
         hold(simData.wykres_osieP_handle, 'on');
@@ -733,7 +733,7 @@ function cern_simulator
         simData.plotLineP_pot = plot(simData.wykres_osieP_handle, NaN, NaN, 'm', 'LineWidth', 1, 'DisplayName', 'E_pot.'); %linia dla energii potencjalnej
         simData.plotLineP_ETotal = plot(simData.wykres_osieP_handle, NaN, NaN, 'k-', 'LineWidth', 2, 'DisplayName', 'E_całk.');
         hold(simData.wykres_osieP_handle, 'off');
-        legend(simData.wykres_osieP_handle, 'Location', 'northeast'); 
+        legend(simData.wykres_osieP_handle, 'Location', 'northeast');
 
         % Opcje do wyboru na wykresach
         opcje_do_wyboru = {
@@ -746,7 +746,7 @@ function cern_simulator
           'Pręd. 2',          'predkosc2';
           'Odległość',        'distance';
           'Pełny wykres energii', 'allEnergies';
-          'Energia potencjalna ukladu', 'Potencjalna'; 
+          'Energia potencjalna ukladu', 'Potencjalna';
         };
 
         plotNazwy = opcje_do_wyboru(:, 1);
@@ -780,7 +780,7 @@ function cern_simulator
 
         simData.wykres_jeden = jedenWykresPopup;
         simData.wykres_dwa = dwaWykresPopup;
-        
+
         % Wywołaj edycjaWykres, aby zainicjować wykresy początkowymi danymi
         edycjaWykres();
     end
@@ -804,10 +804,10 @@ function cern_simulator
         axes(simData.wykres_osieL_handle); % Ustawia aktywną oś dla lewego wykresu
         xlabel('Czas [s]');
         grid on;
-        
+
         % Ukrywa wszystkie linie początkowo na lewym wykresie
         set([simData.plotLineL_single, simData.plotLineL_E1, simData.plotLineL_E2, simData.plotLineL_pot, simData.plotLineL_ETotal], 'Visible', 'off');
-        
+
         if strcmp(lewyZmienna, 'allEnergies')
             title('Wykres: Wszystkie Energie');
             ylabel('Energia [J]');
@@ -816,7 +816,7 @@ function cern_simulator
             set(simData.plotLineL_E2, 'XData', simData.czasHistory, 'YData', simData.historyE2, 'Visible', 'on');
             set(simData.plotLineL_pot, 'XData', simData.czasHistory, 'YData', simData.historyPot, 'Visible', 'on'); % NOWE: ustawia energię potencjalną
             set(simData.plotLineL_ETotal, 'XData', simData.czasHistory, 'YData', simData.historyTotalEnergy, 'Visible', 'on');
-            
+
             % Dane do automatycznego skalowania osi Y
             allYDataL = [simData.historyE1(:); simData.historyE2(:); simData.historyPot(:); simData.historyTotalEnergy(:)];
         else
@@ -840,18 +840,18 @@ function cern_simulator
                     plotDataL = simData.historyPredkosc2;
                 case 'distance'
                     plotDataL = simData.historyDistance;
-                case 'Potencjalna' 
+                case 'Potencjalna'
                     plotDataL = simData.historyPot;
                 otherwise
                     plotDataL = [];
             end
             % Ustawia dane i pokazuje linię dla wybranej zmiennej
             set(simData.plotLineL_single, 'XData', simData.czasHistory, 'YData', plotDataL, 'Visible', 'on');
-            
+
             % Dane do automatycznego skalowania osi Y
             allYDataL = plotDataL(:);
         end
-        
+
         % Automatyczne skalowanie osi Y dla lewego wykresu
         if ~isempty(allYDataL) && ~all(isnan(allYDataL)) % Upewnia się, że dane nie są puste ani same NaN
             minY = min(allYDataL);
@@ -860,7 +860,7 @@ function cern_simulator
             if yMargin == 0
                 yMargin = 0.1 * abs(minY);
                 if yMargin == 0
-                    yMargin = 0.1; 
+                    yMargin = 0.1;
                 end
             end
             set(simData.wykres_osieL_handle, 'YLim', [minY - yMargin, maxY + yMargin]);
@@ -885,7 +885,7 @@ function cern_simulator
             set(simData.plotLineP_E2, 'XData', simData.czasHistory, 'YData', simData.historyE2, 'Visible', 'on');
             set(simData.plotLineP_pot, 'XData', simData.czasHistory, 'YData', simData.historyPot, 'Visible', 'on'); % NOWE: ustawia energię potencjalną
             set(simData.plotLineP_ETotal, 'XData', simData.czasHistory, 'YData', simData.historyTotalEnergy, 'Visible', 'on');
-            
+
             % Dane do automatycznego skalowania osi Y
             allYDataP = [simData.historyE1(:); simData.historyE2(:); simData.historyPot(:); simData.historyTotalEnergy(:)];
         else
@@ -909,24 +909,24 @@ function cern_simulator
                     plotDataP = simData.historyPredkosc2;
                 case 'distance'
                     plotDataP = simData.historyDistance;
-                case 'Potencjalna' 
+                case 'Potencjalna'
                     plotDataP = simData.historyPot;
                 otherwise
                     plotDataP = [];
             end
             % Ustawia dane i pokazuje linię dla wybranej zmiennej
             set(simData.plotLineP_single, 'XData', simData.czasHistory, 'YData', plotDataP, 'Visible', 'on');
-            
+
             % Dane do automatycznego skalowania osi Y
             allYDataP = plotDataP(:);
         end
 
         % Automatyczne skalowanie osi Y dla prawego wykresu
-        if ~isempty(allYDataP) && ~all(isnan(allYDataP)) 
+        if ~isempty(allYDataP) && ~all(isnan(allYDataP))
             minY = min(allYDataP);
             maxY = max(allYDataP);
             yMargin = (maxY - minY) * 0.1; % 10% margines
-            if yMargin == 0 
+            if yMargin == 0
                 yMargin = 0.1 * abs(minY);
                 if yMargin == 0
                     yMargin = 0.1; % Domyślny margines
@@ -937,7 +937,7 @@ function cern_simulator
             set(simData.wykres_osieP_handle, 'YLimMode', 'auto');
         end
 
-        
+
         axes(simulationAxes);
     end
 
@@ -961,7 +961,7 @@ function cern_simulator
             updateSimulation();
             % Odświeża GUI
             drawnow();
-            pause(0.02); % Czas pauzy,ok 50fps 
+            pause(0.02); % Czas pauzy,ok 50fps
         end
     end
 
